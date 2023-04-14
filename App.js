@@ -10,6 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import SignIn from './Pages/SignIn';
 import Properties from './Pages/Properties';
 import Map from './Pages/Map';
+import PropertyDetails from './Pages/PropertyDetails';
 
 function HomeScreen({ navigation }) {
   return (
@@ -131,6 +132,20 @@ export default function App() {
           <Drawer.Screen
             name="Map"
             component={Map}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <Ionicons
+                  name="ios-map-sharp"
+                  size={size}
+                  color={focused ? 'blue' : 'gray'}
+                />
+              ),
+            }}
+          />
+
+          <Drawer.Screen
+            name="Property"
+            component={PropertyDetails}
             options={{
               drawerIcon: ({ focused, size }) => (
                 <Ionicons

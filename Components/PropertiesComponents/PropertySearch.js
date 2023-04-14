@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     height: 190,
     rowGap: 10,
-    backgroundColor: '#f5f5f0',
+    backgroundColor: '#f2f2f2',
   },
   dropDowns: {
     display: 'flex',
