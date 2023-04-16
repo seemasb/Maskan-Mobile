@@ -11,6 +11,7 @@ import SignIn from './Pages/SignIn';
 import Properties from './Pages/Properties';
 import Map from './Pages/Map';
 import PropertyDetails from './Pages/PropertyDetails';
+import SignUp from './Pages/SignUp'
 
 function HomeScreen({ navigation }) {
   return (
@@ -156,7 +157,21 @@ export default function App() {
               ),
             }}
           />
+          <Drawer.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <Ionicons
+                  name="ios-map-sharp"
+                  size={size}
+                  color={focused ? 'blue' : 'gray'}
+                />
+              ),
+            }}
+          />
         </Drawer.Navigator>
+        
       </NavigationContainer>
     </PaperProvider>
   );

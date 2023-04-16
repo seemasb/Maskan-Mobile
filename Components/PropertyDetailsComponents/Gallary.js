@@ -64,7 +64,7 @@ const Gallary = () => {
                 itemWidth={itemWidth}
                 itemHeight={itemHeight}
                 onSnapToItem={(index) => setActiveSlide(index)}
-                initialScrollIndex={1}
+                // initialScrollIndex={1}
             />
             {/* <Pagination
         dotsLength={data.length}

@@ -3,17 +3,20 @@ import Gallary from "../Components/PropertyDetailsComponents/Gallary";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Divider } from "react-native-paper";
-import { Button, Dialog, Portal } from "react-native-paper";
+import { Button, Dialog, Portal , Snackbar } from "react-native-paper";
 import { useState } from "react";
 import MapView, { Marker } from 'react-native-maps';
 import MarkerIcon from '../assets/marker.png'
 import Map from "./Map";
-
+import { MaterialIcons } from '@expo/vector-icons';
+import ScheduleTour from "../Components/PropertyDetailsComponents/ScheduleTour";
 
 function PropertyDetails() {
     const [visible, setVisible] = useState(false);
+    const [showSnackbar, setShowSnackbar] = useState(false);
 
     const showDialog = () => setVisible(true);
+    const showSnackBar = ()=> setShowSnackbar(true);
 
     const hideDialog = () => setVisible(false);
     const [markers, setMarkers] = useState([
@@ -66,10 +69,50 @@ function PropertyDetails() {
                         <Text style={styles.sectionTitle}>Desription</Text>
                         <Text style={{ color: '#8c8c8c', lineHeight: 20, letterSpacing: 1 }}>The primary bedroom suite is a true retreat with a spa-like bathroom that includes a soaking tub,
                             walk-in shower, and dual vanities. There are three additional
-                            bedrooms, each with its own unique charm and character, along with
-                            a bonus room that can be used as an office or playroom.
+                            bedrooms, each with its own unique charm and character.
                         </Text>
                     </View>
+
+                    <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Features</Text>
+                        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                            <View style={{ flexDirection: 'row', columnGap: 40 }}>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={styles.iconFeature}>
+                                        <FontAwesome5 name="car-alt" size={30} color="#45729d" />
+                                    </View>
+                                    <Text style={styles.featureText}>Garage</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={styles.iconFeature}>
+                                        <MaterialIcons name="pool" size={30} color="#45729d" />
+                                    </View>
+                                    <Text style={styles.featureText}>Pool</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={styles.iconFeature}>
+                                        <MaterialIcons name="elevator" size={30} color="#45729d" />
+                                    </View>
+                                    <Text style={styles.featureText}>Elevator</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={styles.iconFeature}>
+                                        <MaterialIcons name="sports-tennis" size={30} color="#45729d" />
+                                    </View>
+                                    <Text style={styles.featureText}>Playground</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={styles.iconFeature}>
+                                        <Icon name="bed" size={30} color="#45729d" />
+                                    </View>
+                                    <Text style={styles.featureText}>Garage</Text>
+                                </View>
+                            </View>
+                        </ScrollView>
+
+                    </View>
+
+
                     {/* <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Desription</Text>
                         <Text style={{ color: '#8c8c8c', lineHeight: 20, letterSpacing: 1 }}>The primary bedroom suite is a true retreat with a spa-like bathroom that includes a soaking tub,
@@ -80,7 +123,7 @@ function PropertyDetails() {
                     </View> */}
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Location</Text>
-                        <View style={{flex:1 , height: 200 , width: '100%' , borderRadius: 13}}>
+                        <View style={{ flex: 1, height: 200, width: '100%', borderRadius: 13 }}>
                             <MapView
                                 style={[{ flex: 1 }, styles.map]}
                                 initialRegion={{
@@ -103,6 +146,8 @@ function PropertyDetails() {
 
                         {/* <Map/> */}
                     </View>
+
+                    {/* <ScheduleTour/> */}
 
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Desription</Text>
@@ -129,21 +174,26 @@ function PropertyDetails() {
                     paddingTop: 27
                 }}
             >
-                <Button mode="contained" onPress={showDialog} style={{borderRadius: 13}}>
+                <Button mode="contained" onPress={showDialog} style={{ borderRadius: 13 }}>
                     Schedule tour
                 </Button>
                 <Portal>
                     <Dialog visible={visible} onDismiss={hideDialog}>
-                        <Dialog.Title>Schedule Tour</Dialog.Title>
+                        <Dialog.Title style={styles.dialogueTitle}>January</Dialog.Title>
                         <Dialog.Content>
                             {/* Content for the dialog */}
+                            <ScheduleTour showSnackBar={showSnackBar} hideDialog={hideDialog} />
                         </Dialog.Content>
-                        <Dialog.Actions>
+                        {/* <Dialog.Actions>
                             <Button onPress={hideDialog}>Close</Button>
-                        </Dialog.Actions>
+                        </Dialog.Actions> */}
                     </Dialog>
                 </Portal>
             </View>
+
+            <Snackbar visible={showSnackbar} onDismiss={() => setShowSnackbar(false)} style={styles.snackbar}>
+                Tour scheduled successfully!
+            </Snackbar>
 
         </View>
     );
@@ -189,6 +239,18 @@ const styles = StyleSheet.create({
         // padding: 7,
         // borderRadius: 100,
     },
+    iconFeature: {
+        backgroundColor: '#f2f2f2',
+        // flexDirection: 'column',
+        padding: 7,
+        borderRadius: 100,
+        width: 45,
+    },
+    featureText: {
+        fontSize: 16,
+        color: '#8c8c8c',
+        marginTop: 5
+    },
     iconBox: {
         backgroundColor: '#fafafa',
         padding: 4,
@@ -199,7 +261,7 @@ const styles = StyleSheet.create({
     sectionTitle: {
         fontWeight: 'bold',
         fontSize: 18,
-        marginBottom: 5,
+        marginBottom: 10,
 
     },
     section: {
@@ -209,6 +271,19 @@ const styles = StyleSheet.create({
     map: {
         width: '100%',
         height: '100%',
-        borderRadius: 13 , 
+        borderRadius: 13,
     },
+    dialogueTitle: {
+        textAlign: 'center',
+        color: '#45729d',
+        fontWeight: 'bold'
+    },
+    snackbar: {
+        backgroundColor: 'green',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 40,
+        margin: 23
+      },
 })
