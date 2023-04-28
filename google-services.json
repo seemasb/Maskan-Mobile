@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "329982405967",
+    "project_id": "maskan-fcm",
+    "storage_bucket": "maskan-fcm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329982405967:android:7b0a9f99368edb7ce7e93a",
+        "android_client_info": {
+          "package_name": "com.seema_512.maskanMobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329982405967-hfjrn9cmd3safg0fonec7ole01e9nfsc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUFeHgASZ23x0yzcDD10xEvfNRcRrNAPQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "329982405967-hfjrn9cmd3safg0fonec7ole01e9nfsc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

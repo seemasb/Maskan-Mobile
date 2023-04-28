@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import * as React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -12,6 +12,20 @@ import Properties from './Pages/Properties';
 import Map from './Pages/Map';
 import PropertyDetails from './Pages/PropertyDetails';
 import SignUp from './Pages/SignUp'
+import BottomNavigator from './Components/ProfileComponents/BottomNavigator'
+import messaging from '@react-native-firebase/messaging';
+
+//IOS Permission notifications and alerts
+async function requestUserPermission() {
+  const authStatus = await messaging().requestPermission();
+  const enabled =
+    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+  if (enabled) {
+    console.log('Authorization status:', authStatus);
+  }
+}
 
 function HomeScreen({ navigation }) {
   return (
@@ -82,6 +96,54 @@ const theme = {
 
 
 export default function App() {
+  const [userLogged, setUserLogged] = React.useState(true);
+
+  React.useEffect(() => {
+    if (requestUserPermission) {
+      //return FCM token for the device
+      messaging().getToken().then(token => {
+        console.log(token);
+      })
+    }
+    else {
+      console.log("Failed token status", authStatus)
+    }
+
+
+    // Check whether an initial notification is available
+    messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage) => {
+        if (remoteMessage) {
+          console.log(
+            'Notification caused app to open from quit state:',
+            remoteMessage.notification,
+          );
+        }
+      });
+
+
+    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+
+    messaging().onNotificationOpenedApp(async (remoteMessage) => {
+      console.log(
+        'Notification caused app to open from background state:',
+        remoteMessage.notification,
+      );
+    });
+
+    // Register background handler
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+      console.log('Message handled in the background!', remoteMessage);
+    });
+
+    //foreground notifications
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    });
+
+    return unsubscribe;
+  }, [])
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
@@ -158,6 +220,19 @@ export default function App() {
             }}
           />
           <Drawer.Screen
+            name="Profile"
+            component={BottomNavigator}
+            options={{
+              drawerIcon: ({ focused, size }) => (
+                <Ionicons
+                  name="ios-map-sharp"
+                  size={size}
+                  color={focused ? 'blue' : 'gray'}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
             name="SignUp"
             component={SignUp}
             options={{
@@ -171,8 +246,9 @@ export default function App() {
             }}
           />
         </Drawer.Navigator>
-        
+
       </NavigationContainer>
+      {/* <BottomNavigator /> */}
     </PaperProvider>
   );
 }

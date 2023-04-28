@@ -12,6 +12,9 @@
     "@expo/webpack-config": "^18.0.1",
     "@ptomasroos/react-native-multi-slider": "^2.2.2",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-firebase/app": "^17.4.2",
+    "@react-native-firebase/messaging": "^17.4.2",
+    "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/material-bottom-tabs": "^6.2.15",
     "@react-navigation/native": "^6.1.6",
@@ -21,6 +24,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.71.6",
+    "react-native-calendars": "^1.1295.0",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-element-dropdown": "^2.9.0",
     "react-native-gesture-handler": "~2.9.0",
@@ -32,7 +36,8 @@
     "react-native-screens": "~3.20.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-web": "~0.18.10"
+    "react-native-web": "~0.18.10",
+    "expo-dev-client": "~2.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
