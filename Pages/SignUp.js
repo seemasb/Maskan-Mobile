@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, View , TextInput } from 'react-native';
-import { Button, ProgressBar, Text, Title } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { Button, ProgressBar, Text, Title, TextInput } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
+import PhoneInput from 'react-native-phone-number-input';
+
+
+
 
 const Stack = createStackNavigator();
 
@@ -9,7 +13,11 @@ const SignUpForm = ({ navigation }) => {
     const [step, setStep] = useState(1);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
+    const [date, setDate] = useState(new Date());
+
+
 
     const handleNextStep = () => {
         setStep(step + 1);
@@ -32,67 +40,111 @@ const SignUpForm = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <Title style={styles.title}>Sign Up</Title>
-            <ProgressBar progress={step / 3} color="#4caf50" style={styles.progress} />
+            {/* <Title style={styles.title}>Sign Up</Title> */}
+            {/* <ProgressBar progress={step / 3} color="#4caf50" style={styles.progress} /> */}
             <View style={styles.stepContainer}>
                 <View style={styles.step}>
                     <Text style={[styles.stepNumber, isStepCompleted(1) && styles.stepCompleted]}>
-                        1
+                        Registeration
                     </Text>
-                    <Button
+                    {/* <Button
                         mode="contained"
                         onPress={() => navigation.navigate('Step 1')}
                         style={styles.button}
                     >
                         Step 1
-                    </Button>
+                    </Button> */}
                 </View>
                 <View style={styles.step}>
                     <Text style={[styles.stepNumber, isStepCompleted(2) && styles.stepCompleted]}>
-                        2
+                        Personal Info
                     </Text>
-                    <Button
+                    {/* <Button
                         mode="contained"
                         onPress={() => navigation.navigate('Step 2')}
                         style={styles.button}
                     >
                         Step 2
-                    </Button>
+                    </Button> */}
                 </View>
                 <View style={styles.step}>
                     <Text style={[styles.stepNumber, isStepCompleted(3) && styles.stepCompleted]}>
-                        3
+                        Verify Acoount
                     </Text>
-                    <Button
+                    {/* <Button
                         mode="contained"
                         onPress={() => navigation.navigate('Step 3')}
                         style={styles.button}
                     >
                         Step 3
-                    </Button>
+                    </Button> */}
                 </View>
             </View>
+            <ProgressBar progress={step / 3} color="#4caf50" style={styles.progress} />
             <View style={styles.content}>
                 {step === 1 && (
                     <View style={styles.formContainer}>
-                        <TextInput
-                            label="Name"
-                            value={name}
-                            onChangeText={(text) => setName(text)}
-                            style={styles.input}
-                        />
+                        {/* <Text>hi</Text> */}
+                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <TextInput
+                                label="First name"
+                                value={name}
+                                mode="outlined"
+                                onChangeText={(text) => setName(text)}
+                                style={styles.inputHalfWidth}
+                            />
+
+                            <TextInput
+                                label="Last name"
+                                value={name}
+                                mode="outlined"
+                                onChangeText={(text) => setName(text)}
+                                style={styles.inputHalfWidth}
+                            />
+                        </View>
                         <TextInput
                             label="Email"
                             value={email}
                             onChangeText={(text) => setEmail(text)}
+                            mode="outlined"
                             style={styles.input}
+                            keyboardType="email-address"
                         />
+                        <TextInput
+                            label="Username"
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}
+                            mode="outlined"
+                            style={styles.input}
+                            keyboardType="email-address"
+                        />
+
                         <TextInput
                             label="Password"
                             value={password}
+                            mode="outlined"
                             onChangeText={(text) => setPassword(text)}
                             secureTextEntry
                             style={styles.input}
+                        />
+                        <PhoneInput
+                            textContainerStyle={{
+                                borderWidth: 1,
+                                borderColor: 'gray',
+                                borderRadius: 3,
+                                // paddingHorizontal: 10,
+                                paddingVertical: 10,
+                                marginRight: -30
+                            }}
+                            defaultCode="US"
+                            placeholder="Enter phone number"
+                            onChangeText={(text) => {
+                                // handle phone number change
+                                setPhone(text);
+                            }}
+                            onChangeFormattedText={(text) => {
+                                // handle formatted phone number change
+                            }}
                         />
                         <Button mode="contained" onPress={handleNextStep} style={styles.button}>
                             Next
@@ -129,6 +181,8 @@ const SignUpForm = ({ navigation }) => {
         </View>
     );
 };
+
+export default SignUpForm;
 
 const SignUpStack = () => {
     return (
@@ -176,15 +230,15 @@ const SignUpStack = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
-        padding: 20,
+        backgroundColor: 'white',
+        padding: 25,
     },
-    title: {
-        color: '#45729d',
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 20,
-    },
+    // title: {
+    //     color: '#45729d',
+    //     fontSize: 28,
+    //     fontWeight: 'bold',
+    //     marginBottom: 20,
+    // },
     progress: {
         marginBottom: 20,
     },
@@ -198,30 +252,36 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     stepNumber: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#45729d',
-        marginBottom: 5,
+        fontSize: 15,
+        // fontWeight: 'bold',
+        color: 'gray',
+        // marginBottom: 5,
     },
     stepCompleted: {
-        color: '#4caf50',
+        color: '#45729d',
     },
     button: {
         marginTop: 10,
         backgroundColor: '#45729d',
+        color: 'white',
     },
     content: {
         flex: 1,
+        // backgroundColor: 'blue'
     },
     formContainer: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
+        // alignItems: 'center',
+        // justifyContent: 'center',
     },
     input: {
         marginBottom: 10,
         width: '100%',
+        // backgroundColor: 'red',
     },
+    inputHalfWidth: {
+        width: '48%',
+    }
 });
 
-export default SignUpStack;
+// export default SignUpStack;
