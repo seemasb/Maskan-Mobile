@@ -12,20 +12,21 @@ import Properties from './Pages/Properties';
 import Map from './Pages/Map';
 import PropertyDetails from './Pages/PropertyDetails';
 import SignUp from './Pages/SignUp'
+import Home from './Pages/Home';
 import BottomNavigator from './Components/ProfileComponents/BottomNavigator'
-import messaging from '@react-native-firebase/messaging';
+// import messaging from '@react-native-firebase/messaging';
 
 //IOS Permission notifications and alerts
-async function requestUserPermission() {
-  const authStatus = await messaging().requestPermission();
-  const enabled =
-    authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-    authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+// async function requestUserPermission() {
+//   const authStatus = await messaging().requestPermission();
+//   const enabled =
+//     authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+//     authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-  if (enabled) {
-    console.log('Authorization status:', authStatus);
-  }
-}
+//   if (enabled) {
+//     console.log('Authorization status:', authStatus);
+//   }
+// }
 
 function HomeScreen({ navigation }) {
   return (
@@ -38,13 +39,13 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function NotificationsScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
-    </View>
-  );
-}
+// function NotificationsScreen({ navigation }) {
+//   return (
+//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+//       <Button onPress={() => navigation.goBack()} title="Go back home" />
+//     </View>
+//   );
+// }
 
 const Drawer = createDrawerNavigator();
 const theme = {
@@ -98,52 +99,55 @@ const theme = {
 export default function App() {
   const [userLogged, setUserLogged] = React.useState(true);
 
-  React.useEffect(() => {
-    if (requestUserPermission) {
-      //return FCM token for the device
-      messaging().getToken().then(token => {
-        console.log(token);
-      })
-    }
-    else {
-      console.log("Failed token status", authStatus)
-    }
+  // React.useEffect(() => {
+  //   if (requestUserPermission) {
+  //     //return FCM token for the device
+  //     messaging().getToken().then(token => {
+  //       console.log(token);
+  //     })
+  //   }
+  //   else {
+  //     console.log("Failed token status", authStatus)
+  //   }
 
 
-    // Check whether an initial notification is available
-    messaging()
-      .getInitialNotification()
-      .then(async (remoteMessage) => {
-        if (remoteMessage) {
-          console.log(
-            'Notification caused app to open from quit state:',
-            remoteMessage.notification,
-          );
-        }
-      });
+  //   // Check whether an initial notification is available
+  //   messaging()
+  //     .getInitialNotification()
+  //     .then(async (remoteMessage) => {
+  //       if (remoteMessage) {
+  //         console.log(
+  //           'Notification caused app to open from quit state:',
+  //           remoteMessage.notification,
+  //         );
+  //       }
+  //     });
 
 
-    // Assume a message-notification contains a "type" property in the data payload of the screen to open
+  //   // Assume a message-notification contains a "type" property in the data payload of the screen to open
 
-    messaging().onNotificationOpenedApp(async (remoteMessage) => {
-      console.log(
-        'Notification caused app to open from background state:',
-        remoteMessage.notification,
-      );
-    });
+  //   messaging().onNotificationOpenedApp(async (remoteMessage) => {
+  //     console.log(
+  //       'Notification caused app to open from background state:',
+  //       remoteMessage.notification,
+  //     );
+  //   });
 
-    // Register background handler
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
-    });
+  //   // Register background handler
+  //   messaging().setBackgroundMessageHandler(async remoteMessage => {
+  //     console.log('Message handled in the background!', remoteMessage);
+  //   });
 
-    //foreground notifications
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-    });
+  //   //foreground notifications
+  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
+  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+  //   });
 
-    return unsubscribe;
-  }, [])
+  //   return unsubscribe;
+  // }, [])
+
+
+
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
@@ -172,7 +176,7 @@ export default function App() {
           />
           <Drawer.Screen
             name="Home"
-            component={HomeScreen}
+            component={Home}
             options={{
               drawerIcon: ({ focused, size }) => (
                 <Ionicons
@@ -181,6 +185,7 @@ export default function App() {
                   color={focused ? 'blue' : 'gray'}
                 />
               ),
+              // headerShown: false // hide header
             }}
           />
           <Drawer.Screen

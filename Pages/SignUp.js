@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { Button, ProgressBar, Text, Title, TextInput } from 'react-native-paper';
 import { createStackNavigator } from '@react-navigation/stack';
 import PhoneInput from 'react-native-phone-number-input';
-
-
+import UploadImages from '../Components/SignUpComponents/UploadImages';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Avatar, Divider } from 'react-native-paper';
 
 
 const Stack = createStackNavigator();
@@ -38,9 +39,16 @@ const SignUpForm = ({ navigation }) => {
         return stepNumber < step;
     };
 
+
+
     return (
         <View style={styles.container}>
-            {/* <Title style={styles.title}>Sign Up</Title> */}
+            {/* <View style={{ flexDirection: 'row', justifyContent: 'center', marginVertical: 10 }}>
+                <Title style={styles.title}>Welcome</Title>
+            </View> */}
+            {/* <View style={styles.lock}>
+                <FontAwesome5 name="unlock-alt" size={30} color={'#45729d'} />
+            </View> */}
             {/* <ProgressBar progress={step / 3} color="#4caf50" style={styles.progress} /> */}
             <View style={styles.stepContainer}>
                 <View style={styles.step}>
@@ -81,99 +89,126 @@ const SignUpForm = ({ navigation }) => {
                 </View>
             </View>
             <ProgressBar progress={step / 3} color="#4caf50" style={styles.progress} />
+
             <View style={styles.content}>
                 {step === 1 && (
+
                     <View style={styles.formContainer}>
-                        {/* <Text>hi</Text> */}
-                        <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <TextInput
-                                label="First name"
-                                value={name}
-                                mode="outlined"
-                                onChangeText={(text) => setName(text)}
-                                style={styles.inputHalfWidth}
-                            />
-
-                            <TextInput
-                                label="Last name"
-                                value={name}
-                                mode="outlined"
-                                onChangeText={(text) => setName(text)}
-                                style={styles.inputHalfWidth}
-                            />
+                        <View style={{ flexDirection: 'column', alignItems: 'center', marginVertical: 10 }}>
+                            <View style={styles.lock}>
+                                <FontAwesome5 name="unlock-alt" size={25} color={'#45729d'} />
+                            </View>
+                            <Title style={styles.title}>Registeration</Title>
                         </View>
-                        <TextInput
-                            label="Email"
-                            value={email}
-                            onChangeText={(text) => setEmail(text)}
-                            mode="outlined"
-                            style={styles.input}
-                            keyboardType="email-address"
-                        />
-                        <TextInput
-                            label="Username"
-                            value={email}
-                            onChangeText={(text) => setEmail(text)}
-                            mode="outlined"
-                            style={styles.input}
-                            keyboardType="email-address"
-                        />
+                        <ScrollView >
+                            {/* <Text>hi</Text> */}
+                            <View style={styles.fieldsContainer}>
+                                <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <TextInput
+                                        label="First name"
+                                        value={name}
+                                        mode="outlined"
+                                        onChangeText={(text) => setName(text)}
+                                        style={styles.inputHalfWidth}
+                                    />
 
-                        <TextInput
-                            label="Password"
-                            value={password}
-                            mode="outlined"
-                            onChangeText={(text) => setPassword(text)}
-                            secureTextEntry
-                            style={styles.input}
-                        />
-                        <PhoneInput
-                            textContainerStyle={{
-                                borderWidth: 1,
-                                borderColor: 'gray',
-                                borderRadius: 3,
-                                // paddingHorizontal: 10,
-                                paddingVertical: 10,
-                                marginRight: -30
-                            }}
-                            defaultCode="US"
-                            placeholder="Enter phone number"
-                            onChangeText={(text) => {
-                                // handle phone number change
-                                setPhone(text);
-                            }}
-                            onChangeFormattedText={(text) => {
-                                // handle formatted phone number change
-                            }}
-                        />
-                        <Button mode="contained" onPress={handleNextStep} style={styles.button}>
-                            Next
-                        </Button>
+                                    <TextInput
+                                        label="Last name"
+                                        value={name}
+                                        mode="outlined"
+                                        onChangeText={(text) => setName(text)}
+                                        style={styles.inputHalfWidth}
+                                    />
+                                </View>
+                                <TextInput
+                                    label="Email"
+                                    value={email}
+                                    onChangeText={(text) => setEmail(text)}
+                                    mode="outlined"
+                                    style={styles.input}
+                                    keyboardType="email-address"
+                                />
+                                <TextInput
+                                    label="Username"
+                                    value={email}
+                                    onChangeText={(text) => setEmail(text)}
+                                    mode="outlined"
+                                    style={styles.input}
+                                    keyboardType="email-address"
+                                />
+
+                                <TextInput
+                                    label="Password"
+                                    value={password}
+                                    mode="outlined"
+                                    onChangeText={(text) => setPassword(text)}
+                                    secureTextEntry
+                                    style={styles.input}
+                                />
+                                <PhoneInput
+                                    textContainerStyle={{
+                                        borderWidth: 1,
+                                        borderColor: 'gray',
+                                        borderRadius: 3,
+                                        // paddingHorizontal: 10,
+                                        paddingVertical: 10,
+                                        marginRight: -30
+                                    }}
+                                    defaultCode="US"
+                                    placeholder="Enter phone number"
+                                    onChangeText={(text) => {
+                                        // handle phone number change
+                                        setPhone(text);
+                                    }}
+                                    onChangeFormattedText={(text) => {
+                                        // handle formatted phone number change
+                                    }}
+                                />
+                                <TextInput
+                                    label="Date Picker"
+                                    value={password}
+                                    mode="outlined"
+                                    onChangeText={(text) => setPassword(text)}
+                                    secureTextEntry
+                                    style={styles.input}
+                                />
+                            </View>
+                        </ScrollView>
+                        <View style={{ backgroundColor: 'white', width: '100%', height: 70 }}>
+                            <Button mode="contained" onPress={handleNextStep} style={styles.button}>
+                                Next
+                            </Button>
+                        </View>
                     </View>
                 )}
                 {step === 2 && (
                     <View style={styles.formContainer}>
-                        <TextInput
-                            label="Optional field"
-                            value={''}
-                            onChangeText={() => { }}
-                            style={styles.input}
-                        />
-                        <Button mode="contained" onPress={handleNextStep} style={styles.button}>
-                            Next
-                        </Button>
-                        <Button mode="outlined" onPress={handlePrevStep} style={styles.button}>
-                            Previous
-                        </Button>
+                        <ScrollView>
+                            <UploadImages />
+                        </ScrollView>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 30 }}>
+                            <Button mode="contained" onPress={handlePrevStep} style={styles.nextANDprevious}>
+                                Previous
+                            </Button>
+                            <Button mode="contained" onPress={handleNextStep} style={styles.nextANDprevious}>
+                                Next
+                            </Button>
+
+                        </View>
                     </View>
                 )}
                 {step === 3 && (
                     <View style={styles.formContainer}>
-                        <Button mode="contained" onPress={handleSignUp} style={styles.button}>
-                            Sign Up
-                        </Button>
-                        <Button mode="outlined" onPress={handlePrevStep} style={styles.button}>
-                            Previous
+                        <View style={{flex: 0 , alignItems: 'center', justifyContent: 'center' , marginTop: '30%' }}>
+                            <Avatar.Icon size={100} icon="email" />
+                            <Text style={{ fontSize: 23, color: 'gray', marginTop: 20 }}>Verify your email</Text>
+                            <Divider style={{ height: 2, width: '80%', backgroundColor: 'lightgray', marginVertical: 20 }} />
+                            <Text style={{ fontSize: 16, color: 'lightgray', textAlign: 'center' }}>
+                                A verification email has been sent to your email, please verify your email address!
+                            </Text>
+                        </View>
+                        <Button mode="contained" onPress={handlePrevStep} style={styles.button}>
+                            Sign In
                         </Button>
                     </View>
                 )}
@@ -232,13 +267,17 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white',
         padding: 25,
+        // backgroundColor: 'red',
+        paddingTop: 30,
+        // backgroundColor: 'blue'
+
     },
-    // title: {
-    //     color: '#45729d',
-    //     fontSize: 28,
-    //     fontWeight: 'bold',
-    //     marginBottom: 20,
-    // },
+    title: {
+        color: '#45729d',
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
     progress: {
         marginBottom: 20,
     },
@@ -264,6 +303,14 @@ const styles = StyleSheet.create({
         marginTop: 10,
         backgroundColor: '#45729d',
         color: 'white',
+        position: 'absolute',
+        bottom: 30,
+        width: '100%',
+    },
+    nextANDprevious: {
+        backgroundColor: '#45729d',
+        color: 'white',
+        width: '47%',
     },
     content: {
         flex: 1,
@@ -271,17 +318,34 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         flex: 1,
+
+
         // alignItems: 'center',
         // justifyContent: 'center',
     },
+    fieldsContainer: {
+        // justifyContent: 'space-between',
+        // backgroundColor: 'red',
+        flex: 1,
+        rowGap: 15, 
+        marginBottom: 20
+    },
     input: {
-        marginBottom: 10,
+        // marginBottom: 10,
         width: '100%',
         // backgroundColor: 'red',
     },
     inputHalfWidth: {
         width: '48%',
-    }
+    },
+    lock: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 50,
+        height: 50,
+        borderRadius: 40,
+        backgroundColor: '#f2f2f2',
+    },
 });
 
 // export default SignUpStack;
