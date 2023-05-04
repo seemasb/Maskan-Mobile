@@ -4,18 +4,19 @@ import * as React from 'react';
 import { Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Calendar from './Calendar';
+import ProfileInfo from './ProfileInfo';
 
-function HomeScreen() {
-    return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Info!</Text>
-        </View>
-    );
-}
+import { createStackNavigator } from '@react-navigation/stack';
+import ChatRoomList from '../Chat/ChatRoomList';
+
+// const Stack = createStackNavigator();
+// const Tab = createBottomTabNavigator();
+
 
 function SettingsScreen() {
     return (
@@ -28,7 +29,8 @@ function SettingsScreen() {
 function ChatScreen() {
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>chatting!</Text>
+            {/* <Text>chatting!</Text> */}
+            <ChatRoomList/>
         </View>
     );
 }
@@ -42,8 +44,22 @@ function CalendarScreen() {
 }
 
 const Tab = createBottomTabNavigator();
+// const TabTop = createMaterialTopTabNavigator();
+
+
 
 export default function App() {
+    // function ProfileScreen() {
+    //     return (
+    //         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    //             <Text>Info!</Text>
+    //             <Stack.Navigator>
+    //                 <Stack.Screen name="Home" component={ProfileInfo} />
+    //                 <Stack.Screen name="Other" component={ChatScreen} />
+    //             </Stack.Navigator>
+    //         </View>
+    //     );
+    // }
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -54,7 +70,7 @@ export default function App() {
                         iconName = focused
                             ? 'user-alt'
                             : 'user';
-                         return <FontAwesome5 name={iconName} size={size} color={color} />
+                        return <FontAwesome5 name={iconName} size={size} color={color} />
                     } else if (route.name === 'Properties') {
                         iconName = focused ? 'ios-home-sharp' : 'ios-home-outline';
                         return <Ionicons name={iconName} size={size} color={color} />;
@@ -76,10 +92,11 @@ export default function App() {
                 tabBarLabel: '',
             })}
         >
-            <Tab.Screen name="Info" component={HomeScreen} />
+            <Tab.Screen name="Info" component={ProfileInfo} options={{ title: 'Nested Navigator' }} />
             <Tab.Screen name="Properties" component={SettingsScreen} />
             <Tab.Screen name="chat" component={ChatScreen} />
             <Tab.Screen name="Calendar" component={Calendar} />
         </Tab.Navigator>
+
     );
 }

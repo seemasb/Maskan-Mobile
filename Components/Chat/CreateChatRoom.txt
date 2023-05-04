@@ -1,0 +1,18 @@
+import database from '@react-native-firebase/database';
+
+// Create a new chat room
+const createChatRoom = (userId, participantId) => {
+  const chatRoomRef = database().ref('/chatRooms').push();
+  const chatRoomId = chatRoomRef.key;
+  const createdAt = new Date().toISOString();
+
+  const newChatRoom = {
+    id: chatRoomId,
+    participants: [userId, participantId],
+    createdAt,
+  };
+
+  chatRoomRef.set(newChatRoom);
+
+  return newChatRoom;
+};

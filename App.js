@@ -1,12 +1,13 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, Alert } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TouchableOpacity } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import * as React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons'; // import an icon library, for example Ionicons
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 import SignIn from './Pages/SignIn';
 import Properties from './Pages/Properties';
 import Map from './Pages/Map';
@@ -28,16 +29,6 @@ import BottomNavigator from './Components/ProfileComponents/BottomNavigator'
 //   }
 // }
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Button
-        onPress={() => navigation.navigate('Notifications')}
-        title="Go to notifications"
-      />
-    </View>
-  );
-}
 
 // function NotificationsScreen({ navigation }) {
 //   return (
@@ -151,27 +142,39 @@ export default function App() {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Home" >
+        <Drawer.Navigator initialRouteName="Home"
+          screenOptions={{
+            // headerShown: false,
+            headerStyle: {
+              // backgroundColor: '#45729d',
+            },
+            headerTintColor: '#45739d',
+            drawerActiveTintColor: '#45729d',
+            drawerItemStyle: {
+              marginBottom: 10
+            },
+            headerRight: () => (
+              <TouchableOpacity>
+                {/* <Text style={{ color: 'red', marginRight: 10 }}>Profile</Text> */}
+                <Ionicons
+                      name="notifications"
+                      size={23}
+                      color='#45739d'
+                      style={{marginRight: 17}}
+                    />
+              </TouchableOpacity>
+            ),
+          }}
+          
+        >
           <Drawer.Screen
-            name="hh"
-            component={HomeScreen}
+            name="Maskan"
+            component={Home}
             options={{
               drawerLabel: 'Maskan',
-              drawerLabelStyle: { fontWeight: 'bold', fontSize: 18, color: 'black' },
+              // headerTransparent: true,
+              drawerLabelStyle: { fontWeight: 'bold', fontSize: 25, color: '#45729d', marginBottom: 10 },
               drawerLockMode: 'locked-closed',
-            }}
-          />
-          <Drawer.Screen
-            name="Log In"
-            component={SignIn}
-            options={{
-              drawerIcon: ({ focused, size }) => (
-                <Ionicons
-                  name="ios-log-in"
-                  size={size}
-                  color={focused ? 'blue' : 'gray'}
-                />
-              ),
             }}
           />
           <Drawer.Screen
@@ -182,18 +185,67 @@ export default function App() {
                 <Ionicons
                   name="ios-home"
                   size={size}
-                  color={focused ? 'blue' : 'gray'}
+                  color={focused ? '#45729d' : 'gray'}
                 />
               ),
               // headerShown: false // hide header
             }}
           />
+
+          {userLogged ?
+            <Drawer.Screen
+              name="Profile"
+              component={BottomNavigator}
+              options={{
+                drawerIcon: ({ focused, size }) => (
+                  <FontAwesome
+                    name="user-circle-o"
+                    size={size}
+                    color={focused ? '#45729d' : 'gray'}
+                  />
+                ),
+              }}
+            />
+            : <></>}
+          {!userLogged ?
+            <>
+              <Drawer.Screen
+                name="Log In"
+                component={SignIn}
+                options={{
+                  drawerIcon: ({ focused, size }) => (
+                    <Ionicons
+                      name="ios-log-in"
+                      size={size}
+                      color={focused ? '#45729d' : 'gray'}
+                    />
+                  ),
+                  drawerLabelStyle: ({ focused }) => ({ color: (focused ? '#45729d' : 'gray') }),
+                }}
+              />
+
+              <Drawer.Screen
+                name="SignUp"
+                component={SignUp}
+                options={{
+                  drawerIcon: ({ focused, size }) => (
+                    <Ionicons
+                      name="person-add"
+                      size={size}
+                      color={focused ? '#45729d' : 'gray'}
+                    />
+                  ),
+                }}
+              />
+
+            </>
+            : <></>}
           <Drawer.Screen
             name="Prperties"
             component={Properties}
             options={{
               drawerIcon: ({ focused, size }) => (
-                <MaterialCommunityIcons name="home-city" size={size} color={focused ? 'blue' : 'gray'} />
+                <MaterialCommunityIcons name="home-city" size={size} color={focused ? '#45729d' : 'gray'} />
               ),
             }}
           />
@@ -205,13 +257,12 @@ export default function App() {
                 <Ionicons
                   name="ios-map-sharp"
                   size={size}
-                  color={focused ? 'blue' : 'gray'}
+                  color={focused ? '#45729d' : 'gray'}
                 />
               ),
             }}
           />
-
-          <Drawer.Screen
+          {/* <Drawer.Screen
             name="Property"
             component={PropertyDetails}
             options={{
@@ -219,37 +270,13 @@ export default function App() {
                 <Ionicons
                   name="ios-map-sharp"
                   size={size}
-                  color={focused ? 'blue' : 'gray'}
+                  color={focused ? '#45729d' : 'gray'}
                 />
               ),
             }}
-          />
-          <Drawer.Screen
-            name="Profile"
-            component={BottomNavigator}
-            options={{
-              drawerIcon: ({ focused, size }) => (
-                <Ionicons
-                  name="ios-map-sharp"
-                  size={size}
-                  color={focused ? 'blue' : 'gray'}
-                />
-              ),
-            }}
-          />
-          <Drawer.Screen
-            name="SignUp"
-            component={SignUp}
-            options={{
-              drawerIcon: ({ focused, size }) => (
-                <Ionicons
-                  name="ios-map-sharp"
-                  size={size}
-                  color={focused ? 'blue' : 'gray'}
-                />
-              ),
-            }}
-          />
+          /> */}
+
+
         </Drawer.Navigator>
 
       </NavigationContainer>
