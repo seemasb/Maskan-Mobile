@@ -13,6 +13,7 @@ import ProfileInfo from './ProfileInfo';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import ChatRoomList from '../Chat/ChatRoomList';
+import ChatScreen from '../Chat/ChatScreen';
 
 // const Stack = createStackNavigator();
 // const Tab = createBottomTabNavigator();
@@ -26,11 +27,13 @@ function SettingsScreen() {
     );
 }
 
-function ChatScreen() {
+function ChatScreenTop() {
     return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ flex: 1 , backgroundColor: 'white'}}>
             {/* <Text>chatting!</Text> */}
             <ChatRoomList/>
+            {/* <ChatScreen chatRoomId={'4ZVbFLq5WydxnS8UDFID'} userId={1} participantId={2}/> */}
+
         </View>
     );
 }
@@ -94,7 +97,7 @@ export default function App() {
         >
             <Tab.Screen name="Info" component={ProfileInfo} options={{ title: 'Nested Navigator' }} />
             <Tab.Screen name="Properties" component={SettingsScreen} />
-            <Tab.Screen name="chat" component={ChatScreen} />
+            <Tab.Screen name="chat" component={ChatScreenTop} />
             <Tab.Screen name="Calendar" component={Calendar} />
         </Tab.Navigator>
 
