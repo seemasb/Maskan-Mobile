@@ -1,19 +1,33 @@
 import { Agenda } from 'react-native-calendars';
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
 
 function Calendar() {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth();
+    const currentDay = currentDate.getDate();
+    date = currentYear + currentMonth + currentDay
+    let events = {
+        '2023-05-22': [{ title: 'Home 1', time: '12:00AM - 1:00PM', ReservedBy: 'Hiba Sbouh' }],
+        '2023-05-23': [{ title: 'Home 2', time: '12:00AM - 1:00PM', ReservedBy: 'Hiba Sbouh' }],
+        '2023-05-25': [{ title: 'Home 3', time: '12:00AM - 1:00PM', ReservedBy: 'Hiba Sbouh' }, { title: 'any js object', time: '12:00AM - 1:00PM', ReservedBy: 'Hiba Sbouh' }, { title: 'any js object', time: '12:00AM - 1:00PM', ReservedBy: 'Hiba Sbouh' }]
+    }
+
+    let marked = {}
+    for (const key in events) {
+        marked[key] = {
+            marked: true
+        }
+    }
+    // console.log('marked', marked)
     return (
         <Agenda
             // The list of items that have to be displayed in agenda. If you want to render item as empty date
             // the value of date key has to be an empty array []. If there exists no value for date key it is
             // considered that the date in question is not yet loaded
-            items={{
-                '2023-05-22': [{ title: 'item 1 - any js object', time: '12:00AM - 1:00PM' }],
-                '2023-05-23': [{ title: 'item 2 - any js object', time: '12:00AM - 1:00PM' }],
-                '2023-05-25': [{ title: 'item 3 - any js object', time: '12:00AM - 1:00PM' }, { title: 'any js object', time: '12:00AM - 1:00PM' }, { title: 'any js object', time: '12:00AM - 1:00PM' }]
-            }}
-            // Initially selected day
-            selected={'2023-05-16'}
+            items={events}
+
             // Minimum date that can be selected, dates before minDate will be grayed out. Default = undefined
             minDate={'2022-05-10'}
             // Maximum date that can be selected, dates after maxDate will be grayed out. Default = undefined
@@ -25,20 +39,31 @@ function Calendar() {
 
             // Specify how each item should be rendered in agenda
             renderItem={(item) => {
-                return <View>
-                    <Text>
+                return <View style={Styles.CalendarElement}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 20, color: '#45729d', marginBottom: 10 }}>
                         {item.title}
+                    </Text >
+                    <Text style={{ fontSize: 16, color: 'gray', marginBottom: 5 }}>
+                        {item.time}
+                    </Text>
+                    <Text>
+                        <Text style={{ color: 'gray' }}>Resereved By: </Text>
+                        {item.ReservedBy}
                     </Text>
                 </View>;
             }}
 
             renderEmptyDate={() => {
-                return <View> <Text>No data found</Text></View>;
+                return <View> <Text >No data found</Text></View>;
             }}
 
             // Specify what should be rendered instead of ActivityIndicator
             renderEmptyData={() => {
-                return (<View><Text>No data found</Text></View>);
+                return (
+                <View style={{alignItems: 'center' , flex: 1 , justifyContent: 'center' , rowGap: 30}}>
+                    <FontAwesome name="calendar-check-o" size={150} color="lightgray" />
+                    <Text style={{ fontSize: 25 , color: 'lightgray' }}>No Events found</Text>
+                    </View>);
             }}
 
             // Hide knob button. Default = false
@@ -46,19 +71,18 @@ function Calendar() {
             // When `true` and `hideKnob` prop is `false`, the knob will always be visible and the user will be able to drag the knob up and close the calendar. Default = false
             showClosingKnob={true}
             // By default, agenda dates are marked if they have at least one item, but you can override this if needed
-            markedDates={{
-                '2023-05-16': { selected: true, marked: true },
-                '2023-05-17': { marked: true },
-                '2023-05-18': { disabled: true, marked: true }
-            }}
+            markedDates={marked}
+
+            // Initially selected day
+            selectedDay={date}
             // If disabledByDefault={true} dates flagged as not disabled will be enabled. Default = false
             disabledByDefault={true}
             // Agenda theme
             // theme={{
-            //     agendaDayTextColor: 'yellow',
+            //     agendaDayTextColor: 'red',
             //     agendaDayNumColor: 'green',
             //     agendaTodayColor: 'red',
-            //     agendaKnobColor: 'blue'
+            //     agendaKnobColor: 'red'
             // }}
             // Agenda container style
             style={{}}
@@ -67,3 +91,16 @@ function Calendar() {
 }
 
 export default Calendar;
+
+const Styles = StyleSheet.create({
+    CalendarElement: {
+        backgroundColor: 'white',
+        // borderColor: 'lightgray',
+        // borderWidth: 1,
+        borderRadius: 10,
+        padding: 10,
+        marginHorizontal: 20,
+        marginVertical: 13,
+
+    }
+})
