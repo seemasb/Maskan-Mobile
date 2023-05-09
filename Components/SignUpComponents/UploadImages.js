@@ -22,14 +22,14 @@ const UploadImages = () => {
 
     const handlePickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync();
-        if (!result.cancelled) {
+        if (!result.canceled) {
             setProfileImage(result.uri);
         }
     };
 
     const handlePickID = async () => {
         const result = await ImagePicker.launchImageLibraryAsync();
-        if (!result.cancelled) {
+        if (!result.canceled) {
             setIdScan(result.uri);
         }
     };

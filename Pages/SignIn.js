@@ -2,10 +2,10 @@ import { View } from "react-native";
 import SignInForm from "../Components/Sign/SignInForm";
 import { StyleSheet } from "react-native";
 
-function SignIn() {
+function SignIn({setUserLogged}) {
     return (
         <View style={styles.container}>
-            <SignInForm />
+            <SignInForm setUserLogged={setUserLogged}/>
         </View>
     );
 }
