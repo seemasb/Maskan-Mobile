@@ -13,6 +13,7 @@ function Properties() {
                 <Text style={{ fontSize: 20, fontWeight: '600', marginTop: 5 }}>Nearby</Text>
                 <Button>See all</Button>
             </View>
+
             <ScrollView style={styles.PropertiesList}>
                 <PropertyCard />
                 <PropertyCard />
@@ -25,6 +26,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         flex: 1,
+        flexDirection: 'column'
         // padding: 25,
     },
     NearBy: {
@@ -33,10 +35,12 @@ const styles = StyleSheet.create({
         paddingLeft: 25,
         paddingRight: 25,
         justifyContent: 'space-between',
+        zIndex: -100
     }
     ,
     PropertiesList: {
         // backgroundColor: 'blue',
+        zIndex: -100
     }
 
 

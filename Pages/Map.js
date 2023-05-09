@@ -97,32 +97,7 @@ export default function Map() {
         ))}
 
       </MapView>
-      {/* <Portal>
-        <FAB.Group
-          open={open}
-          style={styles.FAB}
-          visible
-          icon={open ? 'close' : 'plus'}
-          actions={[
-            {
-              icon: 'map',
-              label: 'Toggle map type',
-              onPress: handleMapTypeToggle,
-            },
-            {
-              icon: 'pencil',
-              label: 'Toggle drawing mode',
-              onPress: handleDrawingModeToggle,
-            },
-          ]}
-          onStateChange={onStateChange}
-          onPress={() => {
-            if (open) {
-              // do something if the speed dial is open
-            }
-          }}
-        />
-      </Portal> */}
+     
       <View style={styles.mapFAB}>
         <FAB
           icon="map"
@@ -140,30 +115,6 @@ export default function Map() {
           onPress={handledeleteDrawing}
         />
       </View>
-      {/* <View style={{ position: 'absolute', bottom: 20, right: 20 , zIndex: 100 }}>
-      <Portal>
-        <FAB.Group
-          open={false}
-          visible
-          icon={drawingMode ? 'close' : 'shape-outline'}
-          actions={[
-            {
-              icon: 'map',
-              label: 'Toggle map type',
-              onPress: handleMapTypeToggle,
-            },
-            {
-              icon: 'pencil',
-              label: 'Toggle drawing mode',
-              onPress: handleDrawingModeToggle,
-            },
-          ]}
-          onStateChange={({ open }) => console.log('isOpen', open)}
-          color="#45729d"
-          style={{ backgroundColor: '#fff' }}
-        />
-        </Portal>
-      </View> */}
 
     </View >
   );

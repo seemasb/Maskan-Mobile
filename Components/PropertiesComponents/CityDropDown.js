@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
-    width:170,
+    width:165,
     backgroundColor: 'white'
   },
   icon: {

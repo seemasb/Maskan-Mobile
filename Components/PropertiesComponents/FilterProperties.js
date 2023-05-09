@@ -136,6 +136,7 @@ const FilterProperties = () => {
             >
                 Search
             </Button>
+            <FilterProperties />
         </View>
     );
 };
