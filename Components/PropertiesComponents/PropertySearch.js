@@ -1,12 +1,21 @@
 import { React, useState } from 'react';
-import { StyleSheet, View, ImageBackground } from 'react-native';
+import { StyleSheet, View, ImageBackground, TouchableOpacity } from 'react-native';
 import { Searchbar, Button } from 'react-native-paper';
 import Home from '../../assets/pool_1.jpg'
 import DropDown from './DropDown';
 import CityDropDown from './CityDropDown';
 import { useTheme } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
-
+import { IconButton } from 'react-native-paper';
+import { FAB } from 'react-native-paper';
+import { Modal, Portal, Text, Provider } from 'react-native-paper';
+import { RadioButton } from 'react-native-paper';
+import Slider from '@react-native-community/slider';
+import { Ionicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 
@@ -15,10 +24,32 @@ const PropertySearch = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState([]);
   const [items, setItems] = useState([
-    { label: 'Apple', value: 'apple' },
-    { label: 'Banana', value: 'banana' }
+    { label: 'Garage', value: 'garage', icon: () => <FontAwesome5 name="car-alt" size={20} color="#45729d" /> },
+    { label: 'Pool', value: 'pool', icon: () => <MaterialIcons name="pool" size={20} color="#45729d" /> },
+    { label: 'Gym', value: 'gym', icon: () => <MaterialIcons name="sports-tennis" size={20} color="#45729d" /> },
+    { label: 'Balcony', value: 'balcony', icon: () => <MaterialCommunityIcons name="balcony" size={20} color="#45729d" /> },
+    { label: 'Elevator', value: 'elevator', icon: () => <MaterialIcons name="elevator" size={20} color="#45729d" /> }
   ]);
+  DropDownPicker.setMode("BADGE");
 
+  const [bedrooms, setBedrooms] = useState(0);
+  const [bathrooms, setBathrooms] = useState(0);
+  const [sliderValue, setSliderValue] = useState(0);
+
+  const onSliderValueChange = (value) => {
+    setSliderValue(value);
+  };
+  const [AreasliderValue, setAreaSliderValue] = useState(0);
+
+  const onAreaSliderValueChange = (value) => {
+    setAreaSliderValue(value);
+  };
+
+  const [visible, setVisible] = useState(false);
+
+  const togglefilteration = () => setVisible(!visible);
+  const hideModal = () => setVisible(false);
+  const containerStyle = { backgroundColor: 'red', padding: 20, zIndex: 100 };
   return (
     <View style={styles.container}>
       {/* <ImageBackground
@@ -36,17 +67,135 @@ const PropertySearch = () => {
           multiple={true}
           min={0}
           max={5}
+          placeholder="Search by Features"
+          badgeDotColors={["#45729d"]}
+          badgeColors={['white']}
+          badgeStyle={{ borderWidth: 1, borderColor: '#45729d' }}
+          zIndex={1000}
+
         />
+
         {/* <Searchbar style={styles.searchBar} placeholder="Search for a property" /> */}
       </View>
       <View style={styles.dropDowns}>
         <DropDown />
         <CityDropDown />
       </View>
-      <Button mode="contained" onPress={() => console.log('Pressed')}>
-        Search
-      </Button>
-      {/* </ImageBackground> */}
+      {visible ?
+        <View style={{ rowGap: 20 }}>
+          <View style={styles.radioButtonGroup}>
+            <Ionicons name="bed-outline" size={28} color="black" />
+            {[1, 2, 3, 4, 5].map((value) => (
+              <TouchableOpacity
+                key={value}
+                style={[
+                  styles.radioButtonItem,
+                  bedrooms === value && { backgroundColor: '#45729d', borderColor: '#45729d' },
+                ]}
+                onPress={() => setBedrooms(value)}
+              >
+                <Text
+                  style={[
+                    styles.radioButtonText,
+                    bedrooms === value && { color: 'white' },
+                  ]}
+                >
+                  {value == 5 ? '+' + value : value}
+                </Text>
+              </TouchableOpacity>
+            ))}
+
+          </View>
+
+          <View style={styles.radioButtonGroup}>
+            <MaterialCommunityIcons name="bathtub-outline" size={28} color="black" />
+            {[1, 2, 3, 4, 5].map((value) => (
+              <TouchableOpacity
+                key={value}
+                style={[
+                  styles.radioButtonItem,
+                  bathrooms === value && { backgroundColor: '#45729d', borderColor: '#45729d' },
+                ]}
+                onPress={() => setBathrooms(value)}
+              >
+                <Text
+                  style={[
+                    styles.radioButtonText,
+                    bathrooms === value && { color: 'white' },
+                  ]}
+                >
+                  {value == 5 ? '+' + value : value}
+                </Text>
+              </TouchableOpacity>
+            ))}
+
+          </View>
+
+
+          <View>
+            <Text style={{ color: 'gray' }}>{`Price Max: ${sliderValue}`}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <Feather name="dollar-sign" size={24} color="black" />
+              <Slider
+                style={{ width: '90%', height: 40 }}
+                minimumValue={2000}
+                maximumValue={20000}
+                minimumTrackTintColor="#45729d"
+                maximumTrackTintColor="gray"
+                step={1}
+                value={sliderValue}
+                onValueChange={onSliderValueChange}
+              />
+            </View>
+
+          </View>
+          <View>
+
+            <Text style={{ color: 'gray' }}>{`Area Max: ${AreasliderValue}`}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              {/* <FontAwesome5 name="ruler-combined" size={24} color="black" /> */}
+              <MaterialCommunityIcons name="ruler-square-compass" size={24} color="black" />
+              <Slider
+                style={{ width: '90%', height: 40 }}
+                minimumValue={500}
+                maximumValue={2000}
+                minimumTrackTintColor="#45729d"
+                maximumTrackTintColor="gray"
+                step={1}
+                value={AreasliderValue}
+                onValueChange={onAreaSliderValueChange}
+              />
+            </View>
+          </View>
+        </View>
+        :
+        <></>
+      }
+
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 7 }}>
+        <Button mode="contained" style={{ backgroundColor: '#45729d', width: '85%', borderRadius: 12 }} labelStyle={{ fontSize: 15 }}>
+          Search
+        </Button>
+        {/* <IconButton
+          icon="tune"
+          size={22}
+          mode='outlined'
+          iconColor='white'
+          style={{backgroundColor: '#45729d'  , borderColor: '#45729d'}}
+          onPress={() => console.log('Pressed')}
+        /> */}
+        <FAB
+          icon="tune"
+          size='small'
+          // customSize={40}
+          color='white'
+          mode='flat'
+          style={{ backgroundColor: '#45729d' }}
+          onPress={togglefilteration}
+        />
+      </View>
+
     </View>
   );
 };
@@ -54,9 +203,9 @@ const PropertySearch = () => {
 const styles = StyleSheet.create({
   container: {
     padding: 25,
-    // flex: 1,
-    marginTop: 5,
-    height: 190,
+    flex: 0,
+    // marginTop: 5,
+    // height: 190,
     rowGap: 10,
     backgroundColor: '#f2f2f2',
   },
@@ -88,6 +237,26 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center', // center the text vertically
 
   },
+  radioButtonGroup: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  radioButtonItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 7,
+    padding: 5,
+    paddingHorizontal: 17,
+    borderRadius: '100%',
+    borderWidth: 1,
+    borderColor: 'lightgray',
+
+  },
+  radioButtonText: {
+    color: 'gray'
+  }
 });
 
 export default PropertySearch;
