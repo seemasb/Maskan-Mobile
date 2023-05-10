@@ -1,28 +1,40 @@
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Title, Paragraph } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Home from '../../assets/pool_1.jpg'
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View, Text } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 const PropertyCard = () => {
+  const [isFavourite, setIsFavourite] = useState(false);
+
+  const handleFavouritePress = () => {
+    setIsFavourite(!isFavourite);
+  };
+
   return (
     <Card style={styles.card}>
       <Card.Cover source={Home} />
+
       <Card.Content style={styles.content}>
         <Paragraph style={styles.location}>
           <Icon name="map-marker" size={16} color="#9e9e9e" /> San Francisco, CA
         </Paragraph>
+
+        <TouchableOpacity onPress={handleFavouritePress} style={{ position: 'absolute' , right: 12 , top: 20 }}>
+          <AntDesign name={isFavourite ? "heart" : "hearto"} size={24} color={isFavourite ? "#45739d" : "#45729d"} style={{ marginLeft: 15 }} />
+        </TouchableOpacity>
         <Title style={styles.price}>$500,000</Title>
         <View style={styles.features}>
-          <View style={{flexDirection: 'row' , alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={styles.icon}>
               <Icon name="bed" size={24} color="#45729d" />
             </View>
             <Text style={styles.featureCount}>3 Bedrooms</Text>
           </View>
-          <View style={{flexDirection: 'row' , alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <View style={styles.icon}>
               <FontAwesome5 name="bath" size={20} color="#45729d" />
             </View>

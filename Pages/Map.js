@@ -1,8 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import MapView, { Marker, Polygon } from 'react-native-maps';
+import MapView, { Marker, Polygon, Callout } from 'react-native-maps';
 import { FAB, Portal } from 'react-native-paper';
 import MarkerIcon from '../assets/marker.png';
+import MarkerIcon2 from '../assets/home.png';
+import { Image } from 'react-native';
+import HomeMap from '../assets/pool_1.jpg'
+import { Entypo } from '@expo/vector-icons';
+import { useEffect } from 'react';
 
 export default function Map() {
   const [markers, setMarkers] = useState([
@@ -16,8 +21,9 @@ export default function Map() {
   const [polygonCoords, setPolygonCoords] = useState([]);
   const [scrollEnabled, setScrollEnabled] = useState(true);
   const [zoomEnabled, setZoomEnabled] = useState(true);
+  const [selected, setSelected] = useState(null);
   const mapRef = useRef(null);
-
+  const [dummyState, setDummyState] = useState(true);
 
 
   function handleMapTypeToggle() {
@@ -37,8 +43,16 @@ export default function Map() {
   const onStateChange = ({ open }) => setState({ open });
   const { open } = state;
 
+  useEffect(() => {
+    if (selected !== null) {
+      // do something here, like fetch data or update the UI
+      setDummyState(!dummyState)
+    }
+  }, [selected])
+
+
   return (
-    <View style={{ flex: 1}}>
+    <View style={{ flex: 1 }}>
       <MapView
         style={[{ flex: 1 }, styles.map]}
         initialRegion={{
@@ -53,9 +67,9 @@ export default function Map() {
         //   setPolygonCoords([...polygonCoords, event.nativeEvent.coordinate]);
         // }}
         onPanDrag={(event) => {
-          if(drawingMode){
-          const { latitude, longitude } = event.nativeEvent.coordinate;
-          setPolygonCoords([...polygonCoords, { latitude, longitude }]);
+          if (drawingMode) {
+            const { latitude, longitude } = event.nativeEvent.coordinate;
+            setPolygonCoords([...polygonCoords, { latitude, longitude }]);
           }
         }}
         mapType={mapType}
@@ -93,15 +107,35 @@ export default function Map() {
             title={marker.title}
             coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
             image={MarkerIcon}
-          />
+            onPress={() => setSelected(marker.id)}
+          >
+            {selected === marker.id && (
+              <Callout>
+                <View style={{ flexDirection: 'row', columnGap: 10, padding: 3  , alignItems: 'center'}}>
+                  {/* <Text>{marker.title}</Text> */}
+                  <Image source={HomeMap} style={styles.mapHomeImage}></Image>
+                  <View style={{ marginTop: 5, rowGap: 5 }}>
+                    <Text style={styles.Price}>$50000</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                      <Entypo name="location-pin" size={22} color="lightgray" style={{ marginLeft: -6 }} />
+                      <Text style={styles.Location}>San Fransisco</Text>
+                    </View>
+                    {/* <TouchableOpacity onPress={() => handleFavouritePress(marker)}>
+                      <Entypo name="heart" size={20} color={marker.isFavourite ? 'red' : 'lightgray'} style={{ marginLeft: -6 }} />
+                    </TouchableOpacity> */}
+                  </View>
+                </View>
+              </Callout>
+            )}
+          </Marker>
         ))}
 
       </MapView>
-     
+
       <View style={styles.mapFAB}>
         <FAB
           icon="map"
-          style={mapType=='standard' ? styles.fab : styles.fabSelected}
+          style={mapType == 'standard' ? styles.fab : styles.fabSelected}
           onPress={handleMapTypeToggle}
         />
         <FAB
@@ -137,14 +171,27 @@ const styles = StyleSheet.create({
     right: 0,
     margin: 20,
     rowGap: 15,
-    
+
   },
   fab: {
     backgroundColor: '#fafafa',
     borderRadius: 50,
   },
-  fabSelected:{
+  fabSelected: {
     backgroundColor: '#bfbfbf',
     borderRadius: 50,
+  },
+  mapHomeImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+  },
+  Price: {
+    fontSize: 16,
+    fontWeight: 'bold'
+  },
+  Location: {
+    fontSize: 13,
+    color: 'gray'
   }
 });
