@@ -211,7 +211,7 @@ export default function App() {
             <>
               <Drawer.Screen
                 name="Log In"
-                component={SignIn}
+                component={() => <SignIn setUserLogged={setUserLogged} />}
                 options={{
                   drawerIcon: ({ focused, size }) => (
                     <Ionicons

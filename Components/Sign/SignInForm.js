@@ -7,20 +7,61 @@ import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FAB } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import axios from 'axios';
 
-export default function SignInForm() {
-    const [email, setEmail] = useState('');
+export default function SignInForm({ setUserLogged }) {
+    const [emailOrUsername, setEmailOrUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [snackbarVisible, setSnackbarVisible] = useState(false);
 
     const toggleShowPassword = () => setShowPassword(!showPassword);
-
-    const handleSignIn = () => {
-        // handle sign-in logic here
-        if (email === '' || password === '') {
+    const handleSignIn = async () => {
+        if (emailOrUsername === '' || password === '') {
             setSnackbarVisible(true);
+            return;
+        }
+
+        const SignInData = {
+            username_or_email: emailOrUsername,
+            password: password,
+        };
+        console.log(SignInData);
+
+        try {
+            ROOT_URL ="http://18.198.203.6:8000";
+            await axios.post(`${ROOT_URL}/accounts/login/`, {SignInData:SignInData})
+            .then(response => {
+                if (response.status === 200) {
+                    // store the token in AsyncStorage
+                    AsyncStorage.setItem('token', response.data.Token);
+                
+                    // set userLogged to true
+                    setUserLogged(true);
+                
+                    console.log('Logged in successfully', response.data.Token);
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                // handle error here
+            });
+            // console.log(response)
+
+            // if (response.status === 200) {
+            //   // store the token in AsyncStorage
+            //   await AsyncStorage.setItem('token', response.data.Token);
+          
+            //   // set userLogged to true
+            //   setUserLogged(true);
+          
+            //   console.log('Logged in successfully', response.data.Token);
+            // }
+        } catch (error) {
+            // handle error here
+            console.log('Error signing in:', error.response.data);
         }
     };
 
@@ -29,16 +70,16 @@ export default function SignInForm() {
     return (
         <View>
             <View style={styles.container}>
-                <View style={{ alignItems:'center'}}>
+                <View style={{ alignItems: 'center' }}>
                     <View style={styles.lock}>
                         <FontAwesome5 name="unlock-alt" size={24} color={'#45729d'} />
                     </View>
                 </View>
                 <Text style={styles.title}>Sign In</Text>
                 <TextInput
-                    label="Email"
-                    value={email}
-                    onChangeText={setEmail}
+                    label="Email or Username"
+                    value={emailOrUsername}
+                    onChangeText={setEmailOrUsername}
                     mode="outlined"
                     style={styles.input}
                     keyboardType="email-address"
@@ -64,7 +105,7 @@ export default function SignInForm() {
                     Sign In
                 </Button>
                 <Snackbar visible={snackbarVisible} onDismiss={handleSnackbarDismiss} duration={3000}>
-                    Please enter both email and password.
+                    Please enter both email or username and password.
                 </Snackbar>
             </View>
             <View style={{ flexDirection: 'column', alignItems: 'center' }}>

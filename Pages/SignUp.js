@@ -12,8 +12,10 @@ const Stack = createStackNavigator();
 
 const SignUpForm = ({ navigation }) => {
     const [step, setStep] = useState(1);
-    const [name, setName] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [date, setDate] = useState(new Date());
@@ -106,17 +108,17 @@ const SignUpForm = ({ navigation }) => {
                                 <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <TextInput
                                         label="First name"
-                                        value={name}
+                                        value={firstName}
                                         mode="outlined"
-                                        onChangeText={(text) => setName(text)}
+                                        onChangeText={(text) => setFirstName(text)}
                                         style={styles.inputHalfWidth}
                                     />
 
                                     <TextInput
                                         label="Last name"
-                                        value={name}
+                                        value={lastName}
                                         mode="outlined"
-                                        onChangeText={(text) => setName(text)}
+                                        onChangeText={(text) => setLastName(text)}
                                         style={styles.inputHalfWidth}
                                     />
                                 </View>
@@ -130,11 +132,11 @@ const SignUpForm = ({ navigation }) => {
                                 />
                                 <TextInput
                                     label="Username"
-                                    value={email}
-                                    onChangeText={(text) => setEmail(text)}
+                                    value={username}
+                                    onChangeText={(text) => setUsername(text)}
                                     mode="outlined"
                                     style={styles.input}
-                                    keyboardType="email-address"
+                                    keyboardType="username"
                                 />
 
                                 <TextInput

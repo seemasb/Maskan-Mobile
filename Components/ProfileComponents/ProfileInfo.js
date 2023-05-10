@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Avatar, Button, Divider, List, useTheme, Badge, IconButton } from 'react-native-paper';
 import Pic from '../../assets/pool_1.jpg'
 import ScheduleCreation from './ScheduleCreation';
 import { createStackNavigator } from '@react-navigation/stack';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 const Stack = createStackNavigator();
 
 const ProfileInfoStack = () => {
@@ -34,8 +35,46 @@ const ProfileInfoStack = () => {
 export default ProfileInfoStack;
 
 
-const ProfileInfo = ({ navigation }) => {
+const ProfileInfo = ({ navigation}) => {
     const { colors } = useTheme();
+    const [userEmail, setUserEmail] = useState("johndoe@example.com");
+    const [userPhoneNumber, setUserPhoneNumber] = useState("+1 555-555-5555");
+    const [userProfilePicture, setUserProfilePicture] = useState(Pic);
+    const [userUsername, setUserUsername] = useState('Seema Sbouh');
+    const [userBirthDate, setUserBirthDate] = useState("January 1, 1990");
+    const [userIDCard, setUserIDCard] = useState(Pic);
+
+
+    useEffect(() => {
+        async function getUserData() {
+          try {
+            const token = await AsyncStorage.getItem('token');
+            if (token !== null) {
+                ROOT_URL ="http://18.198.203.6:8000";
+                const response = await axios.get(`${ROOT_URL}/accounts/users/${token}`);
+                if(response.status ===200)
+                {
+                    const user = response.data;
+                    setUserEmail(user.email);
+                    setUserPhoneNumber(user.phone_number);
+                    setUserProfilePicture(user.profile.profile_picture);
+                    setUserUsername(user.username);
+                    setUserBirthDate(user.date_of_birth);
+                    setUserIDCard(user.profile.ID_card);
+                }
+                else{
+                    console.log(response.data);
+                }
+            } else {
+                console.log('Value does not exist'); // Value does not exist
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+    
+        getUserData();
+      }, []);
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -43,7 +82,7 @@ const ProfileInfo = ({ navigation }) => {
                 <View style={styles.header}>
 
                     <Avatar.Image
-                        source={Pic}
+                        source={{ uri: userProfilePicture }}
                         size={150}
                         style={styles.avatar}
                     />
@@ -54,7 +93,7 @@ const ProfileInfo = ({ navigation }) => {
                         style={{ position: 'absolute', bottom: 30, right: 130 , backgroundColor: 'lightgray'}}
                         onPress={() => console.log('Pressed')}
                     /> */}
-                    <Text style={[styles.title, { color: colors.text }]}>Seema Sbouh</Text>
+                    <Text style={[styles.title, { color: colors.text }]}>{userUsername}</Text>
 
                     {/* <Button
                         icon="camera"
@@ -71,17 +110,17 @@ const ProfileInfo = ({ navigation }) => {
                     {/* <Text>Profile Information</Text> */}
                     <List.Item
                         title="Email"
-                        description="johndoe@example.com"
+                        description= {userEmail}
                         left={() => <List.Icon icon="email" color={colors.primary} />}
                     />
                     <List.Item
                         title="Phone Number"
-                        description="+1 555-555-5555"
+                        description={userPhoneNumber}
                         left={() => <List.Icon icon="phone" color={colors.primary} />}
                     />
                     <List.Item
                         title="Birthdate"
-                        description="January 1, 1990"
+                        description={userBirthDate}
                         left={() => <List.Icon icon="cake" color={colors.primary} />}
                     />
                 </List.Section>
@@ -89,6 +128,11 @@ const ProfileInfo = ({ navigation }) => {
 
                 <List.Section style={{ paddingLeft: 25 }}>
                     <List.Subheader>ID Image</List.Subheader>
+                    <Avatar.Image
+                        source={{uri:userIDCard}}
+                        size={150}
+                        style={styles.avatar}
+                    />
                     <List.Item
                         left={() => <List.Icon icon="image" color={colors.primary} />}
                     />
