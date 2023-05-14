@@ -174,7 +174,7 @@ const PropertySearch = () => {
       }
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 7 }}>
-        <Button mode="contained" style={{ backgroundColor: '#45729d', width: '85%', borderRadius: 12 }} labelStyle={{ fontSize: 15 }}>
+        <Button mode="contained" style={{ backgroundColor: '#45729d', width: '85%' }} labelStyle={{ fontSize: 15 }}>
           Search
         </Button>
         {/* <IconButton
