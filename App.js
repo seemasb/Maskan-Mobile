@@ -262,7 +262,7 @@ export default function App() {
               ),
             }}
           />
-          {/* <Drawer.Screen
+          <Drawer.Screen
             name="Property"
             component={PropertyDetails}
             options={{
@@ -274,7 +274,7 @@ export default function App() {
                 />
               ),
             }}
-          /> */}
+          />
 
 
         </Drawer.Navigator>
