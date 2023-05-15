@@ -249,7 +249,7 @@ const PropertySearch = ({ setCradSearchResponse }) => {
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 7 }}>
         <Button
           mode="contained"
-          style={{ backgroundColor: '#45729d', width: '85%', borderRadius: 12 }}
+          style={{ backgroundColor: '#45729d', width: '85%' }}
           labelStyle={{ fontSize: 15 }}
           onPress={handleSearchProperties}
         >
