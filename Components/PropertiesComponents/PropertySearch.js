@@ -227,7 +227,7 @@ const PropertySearch = ({ setCradSearchResponse }) => {
             <Text style={{ color: 'gray' }}>{`Area Max: ${AreasliderValue}`}</Text>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              {/* <FontAwesome5 name="ruler-combined" size={24} color="black" /> */}
+              
               <MaterialCommunityIcons name="ruler-square-compass" size={24} color="black" />
               <Slider
                 style={{ width: '90%', height: 40 }}
@@ -249,7 +249,7 @@ const PropertySearch = ({ setCradSearchResponse }) => {
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 7 }}>
         <Button
           mode="contained"
-          style={{ backgroundColor: '#45729d', width: '85%' }}
+          style={{ backgroundColor: '#45729d', width: '85%'}}
           labelStyle={{ fontSize: 15 }}
           onPress={handleSearchProperties}
         >
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
     marginVertical: 7,
     padding: 5,
     paddingHorizontal: 17,
-    borderRadius: '100%',
+    borderRadius: 30,
     borderWidth: 1,
     borderColor: 'lightgray',
 

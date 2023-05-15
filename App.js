@@ -88,7 +88,7 @@ const theme = {
 
 
 export default function App() {
-  const [userLogged, setUserLogged] = React.useState(false);
+  const [userLogged, setUserLogged] = React.useState(true);
 
   // React.useEffect(() => {
   //   if (requestUserPermission) {
