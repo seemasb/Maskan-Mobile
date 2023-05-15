@@ -6,6 +6,8 @@ import ScheduleCreation from './ScheduleCreation';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import { ActivityIndicator } from 'react-native';
+import { Image } from 'react-native-elements';
 const Stack = createStackNavigator();
 
 const ProfileInfoStack = () => {
@@ -39,10 +41,10 @@ const ProfileInfo = ({ navigation}) => {
     const { colors } = useTheme();
     const [userEmail, setUserEmail] = useState("johndoe@example.com");
     const [userPhoneNumber, setUserPhoneNumber] = useState("+1 555-555-5555");
-    const [userProfilePicture, setUserProfilePicture] = useState(Pic);
+    const [userProfilePicture, setUserProfilePicture] = useState(null);
     const [userUsername, setUserUsername] = useState('Seema Sbouh');
     const [userBirthDate, setUserBirthDate] = useState("January 1, 1990");
-    const [userIDCard, setUserIDCard] = useState(Pic);
+    const [userIDCard, setUserIDCard] = useState(null);
 
 
     useEffect(() => {
@@ -55,6 +57,7 @@ const ProfileInfo = ({ navigation}) => {
                 if(response.status ===200)
                 {
                     const user = response.data;
+                    console.log(user);
                     setUserEmail(user.email);
                     setUserPhoneNumber(user.phone_number);
                     setUserProfilePicture(user.profile.profile_picture);
@@ -81,11 +84,11 @@ const ProfileInfo = ({ navigation}) => {
             <View style={styles.container}>
                 <View style={styles.header}>
 
-                    <Avatar.Image
+                    {userProfilePicture!==null &&<Avatar.Image
                         source={{ uri: userProfilePicture }}
-                        size={150}
+                        size={180}
                         style={styles.avatar}
-                    />
+                    />}
                     {/* <IconButton
                         icon="camera"
                         color="#45729d"
@@ -126,16 +129,21 @@ const ProfileInfo = ({ navigation}) => {
                 </List.Section>
                 {/* <Divider /> */}
 
-                <List.Section style={{ paddingLeft: 25 }}>
+                <List.Section style={{ alignItems:'center' }}>
                     <List.Subheader>ID Image</List.Subheader>
-                    <Avatar.Image
+                        
+                        <Image
+                            source={{ uri: userIDCard }}
+                            style={{ width: 380, height: 200, alignSelf:'center',alignItems:'center' }}
+                            PlaceholderContent={<ActivityIndicator />}
+                        />
+                    {/* <Avatar.Image
                         source={{uri:userIDCard}}
                         size={150}
                         style={styles.avatar}
-                    />
-                    <List.Item
+                    />  <List.Item
                         left={() => <List.Icon icon="image" color={colors.primary} />}
-                    />
+                    /> */}
                 </List.Section>
 
                 <Button
