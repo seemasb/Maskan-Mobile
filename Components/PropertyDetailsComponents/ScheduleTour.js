@@ -1,11 +1,141 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Button, IconButton, Snackbar } from 'react-native-paper';
 
-const ScheduleTour = ({showSnackBar , hideDialog}) => {
+const ScheduleTour = ({ showSnackBar, hideDialog }) => {
     const [selectedDay, setSelectedDay] = useState('MON');
     const [selectedTime, setSelectedTime] = useState(null);
     const [showSnackbar, setShowSnackbar] = useState(false);
+    const [scheduleData, setScheduleData] = useState();
+    const [ScheduleTimeSlots, setScheduleTimeSlots] = useState();
+    const [daysTest, setDaysTest] = useState();
+
+    ROOT_URL = "http://18.198.203.6:8000";
+    const [Events, setEvent] = useState(null)
+    const testData = [
+        {
+            "id": 32,
+            "home": 2,
+            "reserved_by": 2,
+            "start_time": 14,
+            "end_time": 15,
+            "date": "2023-05-17",
+            "user": 2,
+            "year": 2023,
+            "month": 5,
+            "day": "WED",
+            "phone_number": "tel:+970-597-292-545",
+            "username": "seema_sbouh",
+            "email": "seema.sbouh512@gmail.com",
+            "dayNum": 17
+        },
+        {
+            "id": 35,
+            "home": null,
+            "reserved_by": null,
+            "start_time": 5,
+            "end_time": 6,
+            "date": "2023-05-17",
+            "user": 2,
+            "year": 2023,
+            "month": 5,
+            "day": "WED",
+            "phone_number": "tel:+970-597-292-545",
+            "username": "seema_sbouh",
+            "email": "seema.sbouh512@gmail.com",
+            "dayNum": 17
+        },
+        {
+            "id": 28,
+            "home": null,
+            "reserved_by": null,
+            "start_time": 9,
+            "end_time": 10,
+            "date": "2023-05-19",
+            "user": 2,
+            "year": 2023,
+            "month": 5,
+            "day": "FRI",
+            "phone_number": "tel:+970-597-292-545",
+            "username": "seema_sbouh",
+            "email": "seema.sbouh512@gmail.com",
+            "dayNum": 19
+        },
+        {
+            "id": 29,
+            "home": null,
+            "reserved_by": null,
+            "start_time": 10,
+            "end_time": 11,
+            "date": "2023-05-19",
+            "user": 2,
+            "year": 2023,
+            "month": 5,
+            "day": "FRI",
+            "phone_number": "tel:+970-597-292-545",
+            "username": "seema_sbouh",
+            "email": "seema.sbouh512@gmail.com",
+            "dayNum": 19
+        },
+        {
+            "id": 24,
+            "home": null,
+            "reserved_by": null,
+            "start_time": 10,
+            "end_time": 11,
+            "date": "2023-05-21",
+            "user": 2,
+            "year": 2023,
+            "month": 5,
+            "day": "SUN",
+            "phone_number": "tel:+970-597-292-545",
+            "username": "seema_sbouh",
+            "email": "seema.sbouh512@gmail.com",
+            "dayNum": 21
+        }]
+
+    useEffect(() => {
+        //get 
+        async function updateFreeTimes() {
+            // try {
+            //     const userToken = await AsyncStorage.getItem('token');
+            //     let header = {};
+            //     if (userToken) {
+            //         header = { 'Authorization': 'Token ' + 'f252f5f4fdece6fd808a13e1dc42d29eec0adb3e' };
+            //     }
+            //     const res = await axios.get(`${ROOT_URL}/reservations/slots/`, { headers: header });
+            //     console.log(res.data)
+
+            let events = {};
+            testData.forEach(item => {
+                const { id, date, home, start_time, end_time, day, dayNum } = item;
+                const eventDate = day + '-' + dayNum
+
+                if (!events[eventDate]) {
+                    events[eventDate] = [];
+                }
+
+                events[eventDate].push({
+                    day: day,
+                    start_time: start_time,
+                    end_time: end_time,
+                    id: id,
+                    home: home
+                });
+            });
+            // setEvent(events)
+            console.log(events)
+            setScheduleData(events)
+            // Convert the object keys into an array
+            setDaysTest(Object.keys(events));
+
+            // } catch (error) {
+            //     console.log(error);
+            // }
+        }
+        updateFreeTimes()
+
+    }, [])
 
     const days = [
         { day: 'MON', date: '14' },
@@ -31,6 +161,8 @@ const ScheduleTour = ({showSnackBar , hideDialog}) => {
     const handleDayClick = (day) => {
         setSelectedDay(day);
         setSelectedTime(null);
+        setScheduleTimeSlots(scheduleData[selectedDay] || []);
+
     };
 
     const handleTimeClick = (time) => {
@@ -49,28 +181,29 @@ const ScheduleTour = ({showSnackBar , hideDialog}) => {
 
                 <IconButton icon="chevron-left" color="#45729d" /> */}
 
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    <View style={styles.buttonContainer}>
-                        {days.map((day) => (
-                            <Button
-                                key={day.day}
-                                mode="contained"
-                                onPress={() => handleDayClick(day.day)}
-                                style={selectedDay == day.day ? styles.selectedDayButton : styles.DayButton}
-                                // style={selectedDay == day && styles.selectedDayButton}
-                                labelStyle={[styles.dayButtonLabel, selectedDay == day.day ? styles.selectedDayButtonLabel : styles.dayButtonLabel]}
-                            >
-                                {/* <View style={styles.column}> */}
-                                <Text >{day.day}</Text>
-                                <Text>-</Text>
-                                <Text >{day.date}</Text>
-                                {/* </View> */}
-                            </Button>
-                        ))}
-                        {/* <IconButton icon="chevron-right" color="#45729d" /> */}
-                    </View>
-                </ScrollView>
-                {/* <IconButton icon="chevron-right" color="#45729d" />
+            <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                <View style={styles.buttonContainer}>
+                    {daysTest ? daysTest.map((day) => (
+                        <Button
+                            key={day}
+                            mode="contained"
+                            onPress={() => handleDayClick(day)}
+                            style={selectedDay == day ? styles.selectedDayButton : styles.DayButton}
+                            // style={selectedDay == day && styles.selectedDayButton}
+                            labelStyle={[styles.dayButtonLabel, selectedDay == day ? styles.selectedDayButtonLabel : styles.dayButtonLabel]}
+                        >
+                            {/* <View style={styles.column}> */}
+                            <Text >{day}</Text>
+                            {/* <Text>-</Text>
+                            <Text >{day.date}</Text> */}
+                            {/* </View> */}
+                        </Button>
+                    )) : <></>}
+
+                    {/* <IconButton icon="chevron-right" color="#45729d" /> */}
+                </View>
+            </ScrollView>
+            {/* <IconButton icon="chevron-right" color="#45729d" />
             </View> */}
             <View style={{ flexDirection: 'row' }}>
                 {
@@ -78,9 +211,9 @@ const ScheduleTour = ({showSnackBar , hideDialog}) => {
                     <IconButton icon="chevron-left" color="#45729d" />
                 }
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                    <View style={styles.TimeContainer}>
+                    {/* <View style={styles.TimeContainer}>
                         {selectedDay &&
-                            timeSlots.map((time) => (
+                            scheduleData.map((time) => (
                                 <Button
                                     key={time.time}
                                     mode="contained"
@@ -91,6 +224,47 @@ const ScheduleTour = ({showSnackBar , hideDialog}) => {
                                     {time.time}
                                 </Button>
                             ))}
+                    </View> */}
+
+
+                    <View style={styles.TimeContainer}>
+                        {selectedDay && ScheduleTimeSlots ?
+                            ScheduleTimeSlots.map((time) => (
+                                <Button
+                                    key={time.id}
+                                    mode="contained"
+                                    onPress={() => handleTimeClick(time.id)}
+                                    style={[
+                                        styles.timeButton,
+                                        selectedTime == time.id ? styles.selectedTimeButton : styles.timeButton
+                                    ]}
+                                    labelStyle={[
+                                        styles.timeButtonLabel,
+                                        selectedTime == time.id
+                                            ? styles.selectedTimeButtonLabel
+                                            : styles.timeButtonLabel
+                                    ]}
+                                >
+                                    {time.start_time} - {time.end_time}
+                                </Button>
+                            )) : <></>}
+
+
+
+                        {/* <View style={styles.TimeContainer}>
+                            {selectedDay &&
+                                scheduleData.map((time) => (
+                                    <Button
+                                        key={time.time}
+                                        mode="contained"
+                                        onPress={() => handleTimeClick(time.time)}
+                                        style={[styles.timeButton, selectedTime == time.time ? styles.selectedTimeButton : styles.timeButton]}
+                                        labelStyle={[styles.timeButtonLabel, selectedTime == time.time ? styles.selectedTimeButtonLabel : styles.timeButtonLabel]}
+                                    >
+                                        {time.time}
+                                    </Button>
+                                ))}
+                        </View> */}
                     </View>
                 </ScrollView>
                 {
@@ -172,7 +346,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#45729d',
         borderRadius: 13,
     },
-    
+
 });
 
 export default ScheduleTour;
