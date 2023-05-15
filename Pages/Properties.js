@@ -4,19 +4,33 @@ import FilterProperties from '../Components/PropertiesComponents/FilterPropertie
 import PropertySearch from '../Components/PropertiesComponents/PropertySearch';
 import { Button } from 'react-native-paper';
 import { ScrollView } from 'react-native-gesture-handler';
+import { useState } from 'react';
+import { FontAwesome } from '@expo/vector-icons';
+
 
 function Properties() {
+    const [cardSearchResponse, setCradSearchResponse] = useState()
     return (
         <View style={styles.container}>
-            <PropertySearch />
+            <PropertySearch setCradSearchResponse={setCradSearchResponse} />
             <View style={styles.NearBy}>
                 <Text style={{ fontSize: 20, fontWeight: '600', marginTop: 5 }}>Nearby</Text>
                 <Button>See all</Button>
             </View>
 
             <ScrollView style={styles.PropertiesList}>
-                <PropertyCard />
-                <PropertyCard />
+                {cardSearchResponse ?
+                    cardSearchResponse.map((CardData) =>
+                        <PropertyCard CardData={CardData} />
+                    )
+                    :
+                    <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', rowGap: 30 }}>
+                        <FontAwesome name="calendar-check-o" size={150} color="lightgray" />
+                        <Text style={{ fontSize: 25, color: 'lightgray' }}>No data matched</Text>
+                    </View>
+                }
+                {/* <PropertyCard />
+                <PropertyCard /> */}
             </ScrollView>
         </View>
     );
