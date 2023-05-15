@@ -3,20 +3,39 @@ import Gallary from "../Components/PropertyDetailsComponents/Gallary";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Divider } from "react-native-paper";
-import { Button, Dialog, Portal , Snackbar } from "react-native-paper";
-import { useState } from "react";
+import { Button, Dialog, Portal, Snackbar } from "react-native-paper";
+import { useState, useEffect } from "react";
 import MapView, { Marker } from 'react-native-maps';
 import MarkerIcon from '../assets/marker.png'
 import Map from "./Map";
 import { MaterialIcons } from '@expo/vector-icons';
 import ScheduleTour from "../Components/PropertyDetailsComponents/ScheduleTour";
+import axios from "axios";
+import { Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 
 function PropertyDetails() {
     const [visible, setVisible] = useState(false);
     const [showSnackbar, setShowSnackbar] = useState(false);
+    const [propertyDetails, setPropertyDetails] = useState();
+    useEffect(() => {
+        const getPropertyDetails = async () => {
+            try {
+                ROOT_URL = "http://18.198.203.6:8000";
+                propertyId = 1;
+                const response = await axios.get(`${ROOT_URL}/properties/home/${propertyId}/`)
+                setPropertyDetails(response.data)
+                console.log(response.data.features.data)
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getPropertyDetails()
+    }, [])
 
     const showDialog = () => setVisible(true);
-    const showSnackBar = ()=> setShowSnackbar(true);
+    const showSnackBar = () => setShowSnackbar(true);
 
     const hideDialog = () => setVisible(false);
     const [markers, setMarkers] = useState([
@@ -28,35 +47,35 @@ function PropertyDetails() {
 
     return (
         <View style={styles.container}>
-            <ScrollView >
-                <Gallary />
+            {propertyDetails ? <ScrollView >
+                <Gallary propertyDetails={propertyDetails} />
 
                 <View style={styles.detailsContainer} >
                     <View>
-                        <Text style={styles.price}>$500,000</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 4 }}>
+                        <Text style={styles.price}>{propertyDetails.price}{propertyDetails.state==="S"?' $':'$ / Year'}</Text>
+                        <View style={{ flexDirection: 'column', justifyContent: 'space-between', marginTop: 4 }}>
                             <View style={styles.location}>
                                 <Icon name="map-marker" size={17} color="#9e9e9e" />
-                                <Text style={{ color: '#9e9e9e' }}>San Francisco</Text>
+                                <Text style={{ color: '#9e9e9e' }}>{propertyDetails.location.address}, {propertyDetails.location.city}</Text>
                             </View>
                             <View style={styles.features}>
                                 <View style={styles.iconBox}>
                                     <View style={styles.icon}>
                                         <Icon name="bed" size={19} color="#cccccc" />
                                     </View>
-                                    <Text style={styles.featureCount}>3</Text>
+                                    <Text style={styles.featureCount}>{propertyDetails.living_space.bedrooms}</Text>
                                 </View>
                                 <View style={styles.iconBox}>
                                     <View style={styles.icon}>
                                         <FontAwesome5 name="bath" size={15} color="#cccccc" />
                                     </View>
-                                    <Text style={styles.featureCount}>2</Text>
+                                    <Text style={styles.featureCount}>{propertyDetails.living_space.bathrooms}</Text>
                                 </View>
                                 <View style={styles.iconBox}>
                                     <View style={styles.icon}>
                                         <FontAwesome5 name="vector-square" size={15} color="#cccccc" />
                                     </View>
-                                    <Text style={styles.featureCount}>180</Text>
+                                    <Text style={styles.featureCount}>{propertyDetails.area}</Text>
                                 </View>
                             </View>
 
@@ -66,52 +85,62 @@ function PropertyDetails() {
                     {/* <Divider style={{ marginTop: 10, marginBottom: 20 }} /> */}
 
                     <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Desription</Text>
-                        <Text style={{ color: '#8c8c8c', lineHeight: 20, letterSpacing: 1 }}>The primary bedroom suite is a true retreat with a spa-like bathroom that includes a soaking tub,
-                            walk-in shower, and dual vanities. There are three additional
-                            bedrooms, each with its own unique charm and character.
+                        <Text style={styles.sectionTitle}>Description</Text>
+                        <Text style={{ color: '#8c8c8c', lineHeight: 20, letterSpacing: 1 }}>
+                            {propertyDetails.description}
                         </Text>
                     </View>
 
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Features</Text>
+
                         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                             <View style={{ flexDirection: 'row', columnGap: 40 }}>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={styles.iconFeature}>
-                                        <FontAwesome5 name="car-alt" size={30} color="#45729d" />
+                                {propertyDetails.features.data.map((item, index) => (
+                                    <View key={index} style={{ alignItems: 'center' }}>
+                                        <View style={styles.iconFeature}>
+                                            {item.key === "garage" && <FontAwesome5 name="car-alt" size={30} color="#45729d" />}
+                                            {item.key === "swimming pool" && <MaterialIcons name="pool" size={30} color="#45729d" />}
+                                            {item.key === "elevator" && <MaterialIcons name="elevator" size={30} color="#45729d" />}
+                                            {item.key === "accessable" && <FontAwesome5 name="accessible-icon" size={30} color="#45729d" />}
+                                            {item.key === "garden" && <Entypo name="tree" size={30} color="#45729d" />}
+                                            {item.key === "furnished" && <MaterialCommunityIcons name="sofa-single" size={30} color="#45729d" />}
+                                            {item.key === "gym" && <MaterialCommunityIcons name="dumbbell" size={30} color="#45729d" />}
+                                        </View>
+                                        <Text style={styles.featureText}>{item.key}</Text>
                                     </View>
-                                    <Text style={styles.featureText}>Garage</Text>
-                                </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={styles.iconFeature}>
-                                        <MaterialIcons name="pool" size={30} color="#45729d" />
-                                    </View>
-                                    <Text style={styles.featureText}>Pool</Text>
-                                </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={styles.iconFeature}>
-                                        <MaterialIcons name="elevator" size={30} color="#45729d" />
-                                    </View>
-                                    <Text style={styles.featureText}>Elevator</Text>
-                                </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={styles.iconFeature}>
-                                        <MaterialIcons name="sports-tennis" size={30} color="#45729d" />
-                                    </View>
-                                    <Text style={styles.featureText}>Playground</Text>
-                                </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={styles.iconFeature}>
-                                        <Icon name="bed" size={30} color="#45729d" />
-                                    </View>
-                                    <Text style={styles.featureText}>Garage</Text>
-                                </View>
+                                ))}
                             </View>
                         </ScrollView>
 
                     </View>
 
+                    <View style={[styles.section, styles.lastSection]}>
+                        <Text style={styles.sectionTitle}>Location</Text>
+                        <View style={{ flex: 1, height: 200, width: '100%', borderRadius: 13 }}>
+                            <MapView
+                                style={[{ flex: 1 }, styles.map]}
+                                initialRegion={{
+                                    latitude: propertyDetails.location.data.lat,
+                                    longitude: propertyDetails.location.data.lng,
+                                    latitudeDelta: 0.0922,
+                                    longitudeDelta: 0.0421,
+                                }}
+                            >
+                                <Marker
+                                    key={propertyDetails.id}
+                                    // title={marker.title}
+                                    coordinate={{ latitude: propertyDetails.location.data.lat, longitude: propertyDetails.location.data.lng}}
+                                    image={MarkerIcon}
+                                />
+
+                            </MapView>
+                        </View>
+
+                        {/* <Map/> */}
+                    </View>
+
+                    {/* <ScheduleTour/> */}
 
                     {/* <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Desription</Text>
@@ -121,46 +150,10 @@ function PropertyDetails() {
                             a bonus room that can be used as an office or playroom.
                         </Text>
                     </View> */}
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Location</Text>
-                        <View style={{ flex: 1, height: 200, width: '100%', borderRadius: 13 }}>
-                            <MapView
-                                style={[{ flex: 1 }, styles.map]}
-                                initialRegion={{
-                                    latitude: 37.78825,
-                                    longitude: -122.4324,
-                                    latitudeDelta: 0.0922,
-                                    longitudeDelta: 0.0421,
-                                }}
-                            >
-                                {markers.map(marker => (
-                                    <Marker
-                                        key={marker.id}
-                                        title={marker.title}
-                                        coordinate={{ latitude: marker.latitude, longitude: marker.longitude }}
-                                        image={MarkerIcon}
-                                    />
-                                ))}
-                            </MapView>
-                        </View>
-
-                        {/* <Map/> */}
-                    </View>
-
-                    {/* <ScheduleTour/> */}
-
-                    <View style={styles.section}>
-                        <Text style={styles.sectionTitle}>Desription</Text>
-                        <Text style={{ color: '#8c8c8c', lineHeight: 20, letterSpacing: 1 }}>The primary bedroom suite is a true retreat with a spa-like bathroom that includes a soaking tub,
-                            walk-in shower, and dual vanities. There are three additional
-                            bedrooms, each with its own unique charm and character, along with
-                            a bonus room that can be used as an office or playroom.
-                        </Text>
-                    </View>
                     {/* <Divider style={{ marginTop: 10, marginBottom: 10 }} /> */}
 
                 </View>
-            </ScrollView>
+            </ScrollView> : <Text>Loading...</Text>}
 
             <View
                 style={{
@@ -219,14 +212,15 @@ const styles = StyleSheet.create({
         // color: '#9e9e9e',
         flexDirection: 'row',
         alignItems: 'center',
-        // marginBottom: 8,
+        marginBottom: 10,
 
     },
     features: {
         flexDirection: 'row',
         alignItems: 'center',
         // marginTop: 12,
-        columnGap: 17,
+        marginLeft:3,
+        columnGap: 20,
     },
     featureCount: {
         fontSize: 15,
@@ -285,5 +279,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginBottom: 40,
         margin: 23
-      },
+    },
+    lastSection: {
+        marginBottom: 100,
+    },
 })
