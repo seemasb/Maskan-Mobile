@@ -101,7 +101,7 @@ const theme = {
 
 
 export default function App() {
-  const [userLogged, setUserLogged] = React.useState(false);
+  const [userLogged, setUserLogged] = React.useState(true);
 
   /////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
   const [ExpoToken, setExpoToken] = React.useState('');

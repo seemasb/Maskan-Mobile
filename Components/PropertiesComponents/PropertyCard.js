@@ -17,7 +17,7 @@ const PropertyCard = ({ CardData }) => {
   console.log(imageSrc)
   return (
     <Card style={styles.card}>
-      <Card.Cover source={{ uri: imageSrc }}/>
+      <Card.Cover source={{ uri: imageSrc }} />
 
       <Card.Content style={styles.content}>
         <Paragraph style={styles.location}>

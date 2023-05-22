@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import Calendar from './Calendar';
 import ProfileInfo from './ProfileInfo';
+import PropertyList from './PropertyList';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import ChatRoomList from '../Chat/ChatRoomList';
@@ -96,7 +97,7 @@ export default function App() {
             })}
         >
             <Tab.Screen name="Info" component={ProfileInfo} options={{ title: 'Nested Navigator' }} />
-            <Tab.Screen name="Properties" component={SettingsScreen} />
+            <Tab.Screen name="Properties" component={PropertyList} />
             <Tab.Screen name="chat" component={ChatScreenTop} />
             <Tab.Screen name="Calendar" component={Calendar} />
         </Tab.Navigator>
