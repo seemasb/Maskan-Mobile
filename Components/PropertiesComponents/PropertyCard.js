@@ -8,14 +8,13 @@ import { View, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
-const PropertyCard = ({ CardData }) => {
+import ROOT_URL from '../ProfileComponents/config';
+const PropertyCard = ({ CardData, is_inProfile}) => {
   const [isFavourite, setIsFavourite] = useState(false);
   const [isLoged, setIsLoged] = useState(false);
 
   const handleFavouritePress = async () => {
     const id_home = CardData.id;
-    ROOT_URL ="http://18.198.203.6:8000";
     const token = await AsyncStorage.getItem('token');
     let header;
     token ? header = {
@@ -39,7 +38,6 @@ const PropertyCard = ({ CardData }) => {
     const fetchData = async () => {
       try {
         const id_home = CardData.id;
-        ROOT_URL ="http://18.198.203.6:8000";
         const token = await AsyncStorage.getItem('token');
         const header = token ? {
           'Authorization': 'Token ' + token
@@ -74,7 +72,7 @@ const PropertyCard = ({ CardData }) => {
           <Icon name="map-marker" size={16} color="#9e9e9e" /> {CardData.location.city}
         </Paragraph>
 
-        {isLoged?<TouchableOpacity onPress={handleFavouritePress} style={{ position: 'absolute', right: 12, top: 20 }}>
+        {isLoged && !is_inProfile?<TouchableOpacity onPress={handleFavouritePress} style={{ position: 'absolute', right: 12, top: 20 }}>
           <AntDesign name={isFavourite ? "heart" : "hearto"} size={24} color={isFavourite ? "#45739d" : "#45729d"} style={{ marginLeft: 15 }} />
         </TouchableOpacity>:<></>}
         <Title style={styles.price}>${CardData.price.toLocaleString('en-US')}</Title>

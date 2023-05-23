@@ -3,8 +3,8 @@ import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Button, Text, Title, IconButton, Provider as PaperProvider } from 'react-native-paper';
 import PropertyCard from '../PropertiesComponents/PropertyCard'
 import { Ionicons } from '@expo/vector-icons';
-
-
+import ROOT_URL from './config';
+import axios from 'axios';
 const Dummy = {
   location: {
     city: 'nablus'
@@ -18,17 +18,43 @@ const Dummy = {
     image: 'first_image'
   }
 }
+
+
 const PropertyList = () => {
   const [activeButton, setActiveButton] = useState('pending'); // Track the active button
-
+  const [data, setData] = useState([]);
   const handleButtonPress = (status) => {
     setActiveButton(status);
   };
 
-  // useEffect(() => {
-  //   console.log(activeButton)
+  const getEndpoint = (selectedButton) => {
+    switch (selectedButton) {
+      case "favorite":
+        return `${ROOT_URL}/properties/favourites_home_list/`;
+      case "pending":
+        return `${ROOT_URL}/properties/pending_home_list/`;
+      case "posted":
+        return `${ROOT_URL}/properties/posted_home_list/`;
+      default:
+        return "";
+    }
+  };
 
-  // }, [activeButton])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const endpoint = getEndpoint(activeButton);
+        const response = await axios.get(endpoint);
+        setData(response.data);
+        // setCount(response.data.length);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+
+  }, [activeButton])
   const renderProperties = () => {
     // Simulated property data based on the status
     const properties = {
@@ -70,8 +96,10 @@ const PropertyList = () => {
         </View>
         {/* <View style={styles.propertiesContainer}>{renderProperties()}</View> */}
         <ScrollView>
-          <PropertyCard CardData={Dummy} />
-          <PropertyCard CardData={Dummy} />
+          
+          { data.map((property) => (
+            <PropertyCard CardData={property} is_inProfile={true} />
+          ))}
         </ScrollView>
       </View>
     </PaperProvider>

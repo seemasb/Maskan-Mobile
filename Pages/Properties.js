@@ -21,7 +21,7 @@ function Properties() {
             <ScrollView style={styles.PropertiesList}>
                 {cardSearchResponse ?
                     cardSearchResponse.map((CardData) =>
-                        <PropertyCard CardData={CardData} />
+                        <PropertyCard CardData={CardData} is_inProfile={false} />
                     )
                     :
                     <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', rowGap: 30 }}>
