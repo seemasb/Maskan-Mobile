@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Title, Paragraph } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -6,15 +6,65 @@ import Home from '../../assets/pool_1.jpg'
 import { FontAwesome5 } from '@expo/vector-icons';
 import { View, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const PropertyCard = ({ CardData }) => {
   const [isFavourite, setIsFavourite] = useState(false);
+  const [isLoged, setIsLoged] = useState(false);
 
-  const handleFavouritePress = () => {
-    setIsFavourite(!isFavourite);
+  const handleFavouritePress = async () => {
+    const id_home = CardData.id;
+    ROOT_URL ="http://18.198.203.6:8000";
+    const token = await AsyncStorage.getItem('token');
+    let header;
+    token ? header = {
+      'Authorization': 'Token ' + token
+    } : header = {}
+    axios.post(`${ROOT_URL}/properties/home/${id_home}/toggle_favorite/`, {}, {
+      headers: header
+    }
+    )
+    .then(function (response) {
+        // console.log(response.data);
+        setIsFavourite(response.data.is_favorite)
+
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const id_home = CardData.id;
+        ROOT_URL ="http://18.198.203.6:8000";
+        const token = await AsyncStorage.getItem('token');
+        const header = token ? {
+          'Authorization': 'Token ' + token
+        } : {};
+        if(token){setIsLoged(true)}
+        axios.get(`${ROOT_URL}/properties/home/${id_home}/toggle_favorite/`, {
+          headers: header
+        })
+          .then(function (response) {
+            
+            setIsFavourite(response.data.is_favorite);
+          })
+          .catch(function (error) {
+            console.log(error);
+            setIsFavourite(false);
+          });
+      } catch (error) {
+        console.log(error);
+        setIsFavourite(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   const imageSrc = CardData.first_image.image
-  console.log(imageSrc)
   return (
     <Card style={styles.card}>
       <Card.Cover source={{ uri: imageSrc }}/>
@@ -24,9 +74,9 @@ const PropertyCard = ({ CardData }) => {
           <Icon name="map-marker" size={16} color="#9e9e9e" /> {CardData.location.city}
         </Paragraph>
 
-        <TouchableOpacity onPress={handleFavouritePress} style={{ position: 'absolute', right: 12, top: 20 }}>
+        {isLoged?<TouchableOpacity onPress={handleFavouritePress} style={{ position: 'absolute', right: 12, top: 20 }}>
           <AntDesign name={isFavourite ? "heart" : "hearto"} size={24} color={isFavourite ? "#45739d" : "#45729d"} style={{ marginLeft: 15 }} />
-        </TouchableOpacity>
+        </TouchableOpacity>:<></>}
         <Title style={styles.price}>${CardData.price.toLocaleString('en-US')}</Title>
         <View style={styles.features}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
