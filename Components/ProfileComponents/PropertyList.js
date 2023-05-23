@@ -44,8 +44,13 @@ const PropertyList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = await AsyncStorage.getItem('token');
+        let header;
+        token ? header = {
+          'Authorization': 'Token ' + token
+        } : header = {}
         const endpoint = getEndpoint(activeButton);
-        const response = await axios.get(endpoint);
+        const response = await axios.get(endpoint, {headers: header});
         setData(response.data);
         // setCount(response.data.length);
       } catch (error) {
