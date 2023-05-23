@@ -5,16 +5,15 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { AntDesign } from '@expo/vector-icons';
 
 const data = [
-  { label: 'Buy', value: '1' },
-  { label: 'Rent', value: '2' },
+  { label: 'Buy', value: 'buy' },
+  { label: 'Rent', value: 'rent' },
 ];
 
-const DropDown = () => {
-  const [value, setValue] = useState(null);
+const DropDown = ({ setStatusValue, StatusValue }) => {
   const [isFocus, setIsFocus] = useState(false);
 
   const renderLabel = () => {
-    if (value || isFocus) {
+    if (StatusValue || isFocus) {
       return (
         <Text style={[styles.label, isFocus && { color: 'blue' }]}>
           Property Type
@@ -40,11 +39,11 @@ const DropDown = () => {
         valueField="value"
         placeholder={!isFocus ? 'Type' : '...'}
         // searchPlaceholder="Search..."
-        value={value}
+        value={StatusValue}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={item => {
-          setValue(item.value);
+          setStatusValue(item.value);
           setIsFocus(false);
         }}
         renderLeftIcon={() => (
@@ -54,7 +53,7 @@ const DropDown = () => {
             name="home"
             size={20}
           />
-          
+
         )}
       />
     </View>
@@ -74,7 +73,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
-    width:165,
+    width: 165,
     backgroundColor: 'white'
   },
   icon: {

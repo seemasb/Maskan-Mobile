@@ -16,10 +16,13 @@ import { Feather } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import axios from 'axios';
+import { FontAwesome } from '@expo/vector-icons';
 
 
 
-const PropertySearch = () => {
+
+const PropertySearch = ({ setCradSearchResponse }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState([]);
@@ -32,14 +35,17 @@ const PropertySearch = () => {
   ]);
   DropDownPicker.setMode("BADGE");
 
-  const [bedrooms, setBedrooms] = useState(0);
-  const [bathrooms, setBathrooms] = useState(0);
-  const [sliderValue, setSliderValue] = useState(0);
+  const [bedrooms, setBedrooms] = useState(null);
+  const [bathrooms, setBathrooms] = useState(null);
+  const [sliderValue, setSliderValue] = useState(null);
+  const [CityValue, setCityValue] = useState(null);
+  const [StatusValue, setStatusValue] = useState(null);
+  const [AreasliderValue, setAreaSliderValue] = useState(null);
+  const [type, setType] = useState("");
 
   const onSliderValueChange = (value) => {
     setSliderValue(value);
   };
-  const [AreasliderValue, setAreaSliderValue] = useState(0);
 
   const onAreaSliderValueChange = (value) => {
     setAreaSliderValue(value);
@@ -50,6 +56,73 @@ const PropertySearch = () => {
   const togglefilteration = () => setVisible(!visible);
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: 'red', padding: 20, zIndex: 100 };
+
+
+  const handleSearchProperties = () => {
+    // console.log(value)
+    setVisible(false)
+    let featuresFinalVersion = '';
+    value.map((feature, index) => {
+
+      // console.log(feature)
+      featuresFinalVersion = featuresFinalVersion + feature
+      // console.log(featuresFinalVersion)
+      if (index != value.length - 1)
+        featuresFinalVersion = featuresFinalVersion + ','
+
+      // else featuresFinalVersion = featuresFinalVersion + feature
+    })
+
+    // console.log(featuresFinalVersion)
+
+    const FilterationReq = {
+      city: CityValue,
+      state: StatusValue,
+      type: type,
+      min_area: '',
+      max_area: AreasliderValue,
+      min_price: '',
+      max_price: sliderValue,
+      features: featuresFinalVersion,
+      bedrooms: bedrooms,
+      bathrooms: bathrooms
+    }
+
+    console.log(FilterationReq)
+
+    const Search = async () => {
+      try {
+        http://18.198.203.6:8000/properties/houses/?bedrooms=4
+        ROOT_URL = "http://18.198.203.6:8000";
+        const response = await axios.get(`${ROOT_URL}/properties/houses/`, {
+          params: {
+            city: CityValue,
+            state: StatusValue,
+            type: type,
+            // min_area: '',
+            max_area: AreasliderValue,
+            // min_price: '',
+            max_price: sliderValue,
+            features: featuresFinalVersion,
+            bedrooms: bedrooms,
+            bathrooms: bathrooms
+
+          }
+        });
+
+        setCradSearchResponse(response.data);
+        console.log(response.data)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    Search();
+
+
+  }
+
+
+
   return (
     <View style={styles.container}>
       {/* <ImageBackground
@@ -78,8 +151,8 @@ const PropertySearch = () => {
         {/* <Searchbar style={styles.searchBar} placeholder="Search for a property" /> */}
       </View>
       <View style={styles.dropDowns}>
-        <DropDown />
-        <CityDropDown />
+        <DropDown StatusValue={StatusValue} setStatusValue={setStatusValue} />
+        <CityDropDown setCityValue={setCityValue} CityValue={CityValue} />
       </View>
       {visible ?
         <View style={{ rowGap: 20 }}>
@@ -138,8 +211,8 @@ const PropertySearch = () => {
               <Feather name="dollar-sign" size={24} color="black" />
               <Slider
                 style={{ width: '90%', height: 40 }}
-                minimumValue={2000}
-                maximumValue={20000}
+                minimumValue={50000}
+                maximumValue={1000000}
                 minimumTrackTintColor="#45729d"
                 maximumTrackTintColor="gray"
                 step={1}
@@ -154,12 +227,12 @@ const PropertySearch = () => {
             <Text style={{ color: 'gray' }}>{`Area Max: ${AreasliderValue}`}</Text>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              {/* <FontAwesome5 name="ruler-combined" size={24} color="black" /> */}
+              
               <MaterialCommunityIcons name="ruler-square-compass" size={24} color="black" />
               <Slider
                 style={{ width: '90%', height: 40 }}
-                minimumValue={500}
-                maximumValue={2000}
+                minimumValue={300}
+                maximumValue={10000}
                 minimumTrackTintColor="#45729d"
                 maximumTrackTintColor="gray"
                 step={1}
@@ -174,7 +247,12 @@ const PropertySearch = () => {
       }
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 7 }}>
-        <Button mode="contained" style={{ backgroundColor: '#45729d', width: '85%', borderRadius: 12 }} labelStyle={{ fontSize: 15 }}>
+        <Button
+          mode="contained"
+          style={{ backgroundColor: '#45729d', width: '85%'}}
+          labelStyle={{ fontSize: 15 }}
+          onPress={handleSearchProperties}
+        >
           Search
         </Button>
         {/* <IconButton
@@ -249,7 +327,7 @@ const styles = StyleSheet.create({
     marginVertical: 7,
     padding: 5,
     paddingHorizontal: 17,
-    borderRadius: '100%',
+    borderRadius: 30,
     borderWidth: 1,
     borderColor: 'lightgray',
 

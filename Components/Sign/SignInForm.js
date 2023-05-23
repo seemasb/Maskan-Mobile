@@ -45,7 +45,7 @@ export default function SignInForm({ setUserLogged }) {
                 }
             })
             .catch(error => {
-                console.error(error);
+                console.error(error); 
                 // handle error here
             });
             // console.log(response)

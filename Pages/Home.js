@@ -3,11 +3,12 @@ import { View, Text, StyleSheet, ImageBackground, ScrollView } from 'react-nativ
 import { TextInput, Button, Title, IconButton } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import WhatWeDo from '../Components/HomeComponents/WhatWeDo';
 
 
 function Home() {
     return (
-        // <ScrollView style={{flex: 1}}>
+        <ScrollView >
             <ImageBackground
                 source={require('../assets/hero.jpg')}
                 style={styles.backgroundImage}
@@ -62,7 +63,8 @@ function Home() {
                     </View>
                 </View>
             </ImageBackground>
-        // </ScrollView>
+            <WhatWeDo />
+        </ScrollView>
     );
 }
 
@@ -71,6 +73,7 @@ const styles = StyleSheet.create({
         flex: 1,
         resizeMode: 'cover',
         justifyContent: 'center',
+        paddingBottom: 130
         // borderRadius: 50,
         // margin: 20
     },

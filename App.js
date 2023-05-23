@@ -1,4 +1,5 @@
 import 'react-native-gesture-handler';
+import { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, Alert, TouchableOpacity } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -15,9 +16,21 @@ import PropertyDetails from './Pages/PropertyDetails';
 import SignUp from './Pages/SignUp'
 import Home from './Pages/Home';
 import BottomNavigator from './Components/ProfileComponents/BottomNavigator'
+
+/////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import axios from 'axios';
+
+
+/////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
+
+
+
+
 // import messaging from '@react-native-firebase/messaging';
 
-//IOS Permission notifications and alerts
+// IOS Permission notifications and alerts
 // async function requestUserPermission() {
 //   const authStatus = await messaging().requestPermission();
 //   const enabled =
@@ -90,6 +103,109 @@ const theme = {
 export default function App() {
   const [userLogged, setUserLogged] = React.useState(true);
 
+  /////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
+  const [ExpoToken, setExpoToken] = React.useState('');
+
+
+  async function registerForPushNotificationsAsync() {
+    let { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+    if (status !== 'granted') {
+      console.log('Permission not granted!');
+      return;
+    }
+    let token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log('expo Token:', token);
+    setExpoToken(token)
+    // Send the token to your server for later use
+  }
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
+
+  Notifications.addNotificationReceivedListener((notification) => {
+    console.log('Notification received:', notification);
+  });
+
+  Notifications.addNotificationResponseReceivedListener((response) => {
+    console.log('Notification response received:', response);
+  });
+
+  useEffect(() => {
+    // Set up notification handler
+    const notificationListener = Notifications.addNotificationReceivedListener((notification) => {
+      // Handle the received notification here
+      console.log('Received notification:', notification);
+    });
+  
+    return () => {
+      // Clean up the notification listener when the component unmounts
+      Notifications.removeNotificationSubscription(notificationListener);
+    };
+  }, []);
+
+  const handleShowNotification = () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: 'New Notification',
+        body: 'You have a new notification!',
+      },
+      trigger: null, // Show the notification immediately
+    });
+  };
+
+  handleShowNotification()
+
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+  }, []);
+
+
+
+  // Define the Expo push notification endpoint
+  const expoPushEndpoint = 'https://exp.host/--/api/v2/push/send';
+
+  // Function to send a push notification
+  async function sendPushNotification(expoPushToken, title, message) {
+    try {
+      // Set the request headers
+      const headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      };
+
+      // Set the notification data
+      const data = {
+        to: expoPushToken,
+        sound: 'default',
+        title: title,
+        body: message,
+      };
+
+      // Send the POST request to the Expo push notification endpoint
+      const response = await axios.post(expoPushEndpoint, data, { headers });
+
+      console.log('Push notification sent:', response.data);
+    } catch (error) {
+      console.error('Error sending push notification:', error);
+    }
+  }
+
+  // Example usage
+  const expoPushToken = ExpoToken; // Replace with the Expo push notification token
+  const notificationTitle = 'New Message';
+  const notificationMessage = 'You have a new message';
+
+  // sendPushNotification(expoPushToken, notificationTitle, notificationMessage);
+
+
+  /////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
+
+
   // React.useEffect(() => {
   //   if (requestUserPermission) {
   //     //return FCM token for the device
@@ -157,15 +273,15 @@ export default function App() {
               <TouchableOpacity>
                 {/* <Text style={{ color: 'red', marginRight: 10 }}>Profile</Text> */}
                 <Ionicons
-                      name="notifications"
-                      size={23}
-                      color='#45739d'
-                      style={{marginRight: 17}}
-                    />
+                  name="notifications"
+                  size={23}
+                  color='#45739d'
+                  style={{ marginRight: 17 }}
+                />
               </TouchableOpacity>
             ),
           }}
-          
+
         >
           <Drawer.Screen
             name="Maskan"
@@ -262,7 +378,7 @@ export default function App() {
               ),
             }}
           />
-          {/* <Drawer.Screen
+          <Drawer.Screen
             name="Property"
             component={PropertyDetails}
             options={{
@@ -274,7 +390,7 @@ export default function App() {
                 />
               ),
             }}
-          /> */}
+          />
 
 
         </Drawer.Navigator>

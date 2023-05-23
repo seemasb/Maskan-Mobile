@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GiftedChat } from 'react-native-gifted-chat';
-import { collection, addDoc, onSnapshot } from "firebase/firestore";
+import { collection, addDoc, onSnapshot , orderBy , query} from "firebase/firestore";
 import { db } from '../../firebase';
 import { View } from 'react-native';
 
@@ -11,8 +11,18 @@ const ChatScreen = ({ route }) => {
     let participantId;
     const [messages, setMessages] = useState([]);
 
+    useEffect(()=>{
+        console.log(messages)
+    },[messages])
+
     useEffect(() => {
-        const messagesRef = collection(db, `chatRooms/${chatRoomId}/messages`);
+        // const messagesRef = collection(db, `chatRooms/${chatRoomId}/messages`);
+        // const messagesRef = collection(db, `chatRooms/${chatRoomId}/messages`).orderBy('createdAt', 'asc');
+
+        const messagesRef = query(
+            collection(db, `chatRooms/${chatRoomId}/messages`),
+            orderBy('createdAt', 'asc')
+          );
 
         const unsubscribe = onSnapshot(messagesRef, (snapshot) => {
             const messageList = snapshot.docs.map((doc) => {
@@ -29,6 +39,10 @@ const ChatScreen = ({ route }) => {
                     },
                 };
             });
+
+            // Sort the messages array based on the createdAt timestamp
+            messageList.sort((a, b) => b.createdAt - a.createdAt );
+
             setMessages(messageList);
         });
 

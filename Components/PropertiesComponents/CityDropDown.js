@@ -5,16 +5,15 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { Ionicons } from '@expo/vector-icons';
 
 const data = [
-  { label: 'Nablus', value: '1' },
-  { label: 'Ramallah', value: '2' },
+  { label: 'Nablus', value: 'nablus' },
+  { label: 'Ramallah', value: 'ramallah' },
 ];
 
-const CityDropDown = () => {
-  const [value, setValue] = useState(null);
+const CityDropDown = ({ setCityValue, CityValue }) => {
   const [isFocus, setIsFocus] = useState(false);
 
   const renderLabel = () => {
-    if (value || isFocus) {
+    if (CityValue || isFocus) {
       return (
         <Text style={[styles.label, isFocus && { color: 'blue' }]}>
           Property Type
@@ -40,17 +39,17 @@ const CityDropDown = () => {
         valueField="value"
         placeholder={!isFocus ? 'City' : '...'}
         // searchPlaceholder="Search..."
-        value={value}
+        value={CityValue}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         onChange={item => {
-          setValue(item.value);
+          setCityValue(item.value);
           setIsFocus(false);
         }}
         renderLeftIcon={() => (
           <Ionicons name="location-outline" size={20} style={styles.icon}
-          color={isFocus ? 'blue' : 'black'} />
-          
+            color={isFocus ? 'blue' : 'black'} />
+
         )}
       />
     </View>
@@ -70,7 +69,7 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderRadius: 8,
     paddingHorizontal: 8,
-    width:165,
+    width: 165,
     backgroundColor: 'white'
   },
   icon: {
