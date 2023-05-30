@@ -4,64 +4,13 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import C1 from '../../assets/pool_1.jpg'
 import { PinchGestureHandler, State } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
+import noImage from '../../assets/no_image.jpg'
 
 
 const { width, height } = Dimensions.get('window');
 const itemWidth = width * 0.7;
 const itemHeight = height * 0.5;
 
-/*
-const Gallary = ({propertyDetails}) => {
-    const [activeSlide, setActiveSlide] = useState(0);
-    const [scale, setScale] = useState(1);
-
-    const onPinchGestureEvent = Animated.event(
-        [{ nativeEvent: { scale } }],
-        { useNativeDriver: true }
-    );
-
-    const onPinchHandlerStateChange = (event) => {
-        if (event.nativeEvent.oldState === State.ACTIVE) {
-            setScale(scale => {
-                if (scale < 1) {
-                    return 1;
-                }
-                return scale;
-            });
-        }
-    };
-
-    const renderItem = ({ item }) => (
-        <PinchGestureHandler
-            onGestureEvent={onPinchGestureEvent}
-            onHandlerStateChange={onPinchHandlerStateChange}
-        >
-            <Animated.View style={[styles.itemContainer, { transform: [{ scale }] }]}>
-                <Image source={item.image} style={styles.itemImage} />
-            </Animated.View>
-        </PinchGestureHandler>
-    );
-    imagesList = []
-    propertyDetails.images.map((item)=>{
-        imagesList.push({
-            id:item.id,
-            image : {uri:item.image}
-        })
-    })
-    return (
-        <View style={styles.container}>
-            <Carousel
-                data={imagesList} 
-                renderItem={renderItem}
-                sliderWidth={width}
-                itemWidth={itemWidth}
-                itemHeight={itemHeight}
-                onSnapToItem={(index) => setActiveSlide(index)}
-                // initialScrollIndex={1}
-            />
-        </View>
-    );
-};*/
 const Gallary = ({ propertyDetails }) => {
     const [activeSlide, setActiveSlide] = useState(0);
     const [scale, setScale] = useState(1);
@@ -82,10 +31,18 @@ const Gallary = ({ propertyDetails }) => {
         });
       }
     };
-    const imagesList = propertyDetails.images.map((item) => ({
+    const imagesList = 
+    propertyDetails.images.length ? 
+    propertyDetails.images.map((item) => ({
         id: item.id,
         image: { uri: item.image },
-    }));
+    }))
+    : 
+    [1,2,3].map((item) => ({
+      id: item,
+      image: noImage,
+  }))
+
   
     const handleImagePress = (index) => {
       const image = imagesList[index].image;

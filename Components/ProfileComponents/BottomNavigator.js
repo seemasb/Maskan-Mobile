@@ -96,7 +96,7 @@ export default function App() {
                 tabBarLabel: '',
             })}
         >
-            <Tab.Screen name="Info" component={ProfileInfo} options={{ title: 'Nested Navigator' }} />
+            <Tab.Screen name="Info" component={ProfileInfo}  />
             <Tab.Screen name="Properties" component={PropertyList} />
             <Tab.Screen name="chat" component={ChatScreenTop} />
             <Tab.Screen name="Calendar" component={Calendar} />

@@ -15,7 +15,9 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
-function PropertyDetails() {
+function PropertyDetails({route}) {
+    const { propName } = route.params;
+    // console.log('propName::::' , propName)
     const [visible, setVisible] = useState(false);
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [propertyDetails, setPropertyDetails] = useState();
@@ -23,7 +25,7 @@ function PropertyDetails() {
         const getPropertyDetails = async () => {
             try {
                 ROOT_URL = "http://18.198.203.6:8000";
-                propertyId = 1;
+                propertyId = propName.id;
                 const response = await axios.get(`${ROOT_URL}/properties/home/${propertyId}/`)
                 setPropertyDetails(response.data)
                 console.log(response.data.features.data)
@@ -102,7 +104,7 @@ function PropertyDetails() {
                                             {item.key === "garage" && <FontAwesome5 name="car-alt" size={30} color="#45729d" />}
                                             {item.key === "swimming pool" && <MaterialIcons name="pool" size={30} color="#45729d" />}
                                             {item.key === "elevator" && <MaterialIcons name="elevator" size={30} color="#45729d" />}
-                                            {item.key === "accessable" && <FontAwesome5 name="accessible-icon" size={30} color="#45729d" />}
+                                            {item.key === "accessible" && <FontAwesome5 name="accessible-icon" size={30} color="#45729d" />}
                                             {item.key === "garden" && <Entypo name="tree" size={30} color="#45729d" />}
                                             {item.key === "furnished" && <MaterialCommunityIcons name="sofa-single" size={30} color="#45729d" />}
                                             {item.key === "gym" && <MaterialCommunityIcons name="dumbbell" size={30} color="#45729d" />}

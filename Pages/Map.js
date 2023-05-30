@@ -8,6 +8,7 @@ import { Image } from 'react-native';
 import HomeMap from '../assets/pool_1.jpg'
 import { Entypo } from '@expo/vector-icons';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 export default function Map() {
   const [markers, setMarkers] = useState([
@@ -24,7 +25,43 @@ export default function Map() {
   const [selected, setSelected] = useState(null);
   const mapRef = useRef(null);
   const [dummyState, setDummyState] = useState(true);
+  const [mapData, setMapData] = useState([]);
+  const [center, setCenter] = useState({ lat: 40.699456330000004, lng: -73.97512397 });
 
+
+  useEffect(() => {
+    ROOT_URL = "http://18.198.203.6:8000";
+    const fetchMarkers = async () => {
+      try {
+        const response = await axios.get(`${ROOT_URL}/properties/houses/`);
+        const newDataList = response.data.map(item => {
+          return {
+            id: item.id,
+            title: 'Home' + item.id,
+            latitude: item.location.data.lat,
+            longitude: item.location.data.lng
+          }
+        });
+        
+        console.log('newDataList:::', newDataList)
+        setMapData(newDataList)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchMarkers();
+  }, [])
+
+  useEffect(() => {
+    if (mapData.length > 0) {
+      const totalLat = mapData.reduce((sum, marker) => sum + marker.latitude, 0);
+      const totalLng = mapData.reduce((sum, marker) => sum + marker.longitude, 0);
+      const avgLat = totalLat / mapData.length;
+      const avgLng = totalLng / mapData.length;
+      console.log('center:::', { lat: avgLat, lng: avgLng })
+      setCenter({ lat: avgLat, lng: avgLng });
+    }
+  }, [mapData]);
 
   function handleMapTypeToggle() {
     setMapType(mapType === 'standard' ? 'satellite' : 'standard');
@@ -51,13 +88,14 @@ export default function Map() {
   }, [selected])
 
 
+
   return (
     <View style={{ flex: 1 }}>
       <MapView
         style={[{ flex: 1 }, styles.map]}
         initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
+          latitude: center.lat,
+          longitude: center.lng,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
@@ -101,7 +139,7 @@ export default function Map() {
           strokeWidth={1}
         />
 
-        {markers.map(marker => (
+        {mapData.map(marker => (
           <Marker
             key={marker.id}
             title={marker.title}
@@ -111,7 +149,7 @@ export default function Map() {
           >
             {selected === marker.id && (
               <Callout>
-                <View style={{ flexDirection: 'row', columnGap: 10, padding: 3  , alignItems: 'center'}}>
+                <View style={{ flexDirection: 'row', columnGap: 10, padding: 3, alignItems: 'center' }}>
                   {/* <Text>{marker.title}</Text> */}
                   <Image source={HomeMap} style={styles.mapHomeImage}></Image>
                   <View style={{ marginTop: 5, rowGap: 5 }}>

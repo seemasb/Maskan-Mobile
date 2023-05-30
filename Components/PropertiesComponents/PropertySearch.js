@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React, useEffect, useState } from 'react';
 import { StyleSheet, View, ImageBackground, TouchableOpacity } from 'react-native';
 import { Searchbar, Button } from 'react-native-paper';
 import Home from '../../assets/pool_1.jpg'
@@ -56,6 +56,10 @@ const PropertySearch = ({ setCradSearchResponse }) => {
   const togglefilteration = () => setVisible(!visible);
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: 'red', padding: 20, zIndex: 100 };
+
+  useEffect(()=>{
+    handleSearchProperties();
+  } , [])
 
 
   const handleSearchProperties = () => {
@@ -120,6 +124,7 @@ const PropertySearch = ({ setCradSearchResponse }) => {
 
 
   }
+
 
 
 

@@ -7,6 +7,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import ChatScreen from './ChatScreen';
 import { Avatar } from 'react-native-paper';
 import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 
 
@@ -55,13 +57,15 @@ const createChatRoomTest = async (participant1Id, participant2Id) => {
 // { navigation, route }
 const ChatRoomList = ({ navigation }) => {
   // const { uid, displayName, photoURL } = route.params;
-  const uid = 4;
+  // const uid = 1;
   const displayName = 'Seema'
   const [chatRooms, setChatRooms] = useState([]);
+  const [chatRoomsNames, setChatRoomsNames] = useState([]);
   const [lastMessages, setLastMessages] = useState({});
   const [timestamps, setTimestamps] = useState({});
+  const [uid, setUID] = useState(3);
 
-  // createChatRoomTest(1, 4)
+  // createChatRoomTest(3, 4)
 
   //////////////////////working/////////////////////
   // useEffect(() => {
@@ -105,6 +109,32 @@ const ChatRoomList = ({ navigation }) => {
   };
 
   useEffect(() => {
+    async function getUserData() {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        if (token !== null) {
+          ROOT_URL = "http://18.198.203.6:8000";
+          const response = await axios.get(`${ROOT_URL}/accounts/users/${token}`);
+          if (response.status === 200) {
+            const user = response.data;
+            console.log(user);
+            // setUID(user.id)
+          }
+          else {
+            console.log(response.data);
+          }
+        } else {
+          console.log('Value does not exist'); // Value does not exist
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getUserData();
+
+
+
     async function getDataRooms() {
       let chatRoomArray = [];
       const querySnapshot = await getDocs(collection(db, "chatRooms"));
@@ -134,6 +164,58 @@ const ChatRoomList = ({ navigation }) => {
 
   useEffect(() => {
     console.log('chatrooms are: ', chatRooms)
+    //here should add a requests to get the name of the chatroom from the user id 
+    async function getChatListUsers(chatRoomId) {
+      try {
+        ROOT_URL = "http://18.198.203.6:8000";
+        const response = await axios.get(`${ROOT_URL}/accounts/account/${chatRoomId}`);
+        if (response.status === 200) {
+          const user = response.data;
+          console.log('use id::::', user.first_name + ' ' + user.last_name);
+          return user.first_name + ' ' + user.last_name; // Return the concatenated string
+        } else {
+          console.log(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+
+    // getChatListUsers();
+
+    // let tempChatRoomsArray = []
+    // chatRooms.map((chatRoom) => {
+    //   // console.log('chatRoom.name:::', chatRoom.name)
+    //   let userId = getChatListUsers(chatRoom.name);
+    //   // console.log('userId:::', userId)
+    //   tempChatRoomsArray.push({
+    //     id: chatRoom.id,
+    //     name: userId.first_name + ' ' + userId.last_name,
+    //   })
+    // })
+    let tempChatRoomsArray = [];
+    async function processChatRooms() {
+      try {
+
+        for (const chatRoom of chatRooms) {
+          const userId = await getChatListUsers(chatRoom.name);
+          tempChatRoomsArray.push({
+            id: chatRoom.id,
+            name: userId,
+          });
+        }
+        // Continue with the rest of your logic using tempChatRoomsArray
+        setChatRoomsNames(tempChatRoomsArray)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    processChatRooms();
+
+
+
   }, [chatRooms])
 
   return (
@@ -151,19 +233,19 @@ const ChatRoomList = ({ navigation }) => {
           // onEndEditing={onTermSubmit}
           />
         </View>
-        {chatRooms ?
+        {chatRoomsNames ?
 
-          chatRooms.map((element) => {
+          chatRoomsNames.map((element) => {
             // console.log(element) 
             // let lastMessage = getLastMessage(element.id);
             // if (element.lastMessage._j)
             return (
               <TouchableOpacity onPress={() => navigation.navigate('Chat Screen', { element })} key={element.id}>
                 <View style={styles.chatRoomElement}>
-                  <Avatar.Text size={50} label='S' />
+                  <Avatar.Text size={50} label={element.name[0]} />
                   <View style={{ marginLeft: 10 }}>
                     {/* <Text style={{ fontWeight: 'bold' }}>{element.name}</Text> */}
-                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>Seema Sbouh</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{element.name}</Text>
                     <Text>{element.id}</Text>
                     {/* <Text>{element.lastMessage._j}</Text> */}
                     {/* <Text>{lastMessage}</Text> */}

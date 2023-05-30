@@ -32,10 +32,11 @@ const ChatScreen = ({ route }) => {
                     text: message.text,
                     createdAt: new Date(message.createdAt.seconds * 1000),
                     user: {
-                        _id: message.user._id,
+                        _id: message.user._id, //this is my user 
                         // name: message.user.name,
                         // avatar: message.user.avatar,
-                        name: 'seema',
+                        name: userId+'',
+                        // name: 'hiba',
                     },
                 };
             });
@@ -58,10 +59,10 @@ const ChatScreen = ({ route }) => {
                 text: message.text,
                 createdAt: new Date(),
                 user: {
-                    _id: userId,
+                    _id: userId, //user who i'm sending to this message
                     //   name: message.user.name,
                     //   avatar: message.user.avatar,
-                    name: 'seema'
+                    name: userId //name of the sender it doean't matter ???
 
                 },
             });

@@ -5,6 +5,8 @@ import PropertyCard from '../PropertiesComponents/PropertyCard'
 import { Ionicons } from '@expo/vector-icons';
 import ROOT_URL from './config';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Dummy = {
   location: {
     city: 'nablus'
@@ -18,6 +20,7 @@ const Dummy = {
     image: 'first_image'
   }
 }
+
 
 
 const PropertyList = () => {
@@ -102,9 +105,9 @@ const PropertyList = () => {
         {/* <View style={styles.propertiesContainer}>{renderProperties()}</View> */}
         <ScrollView>
           
-          { data.map((property) => (
-            <PropertyCard CardData={property} is_inProfile={true} />
-          ))}
+          { data ? data.map((property , index) => (
+            <PropertyCard CardData={property} is_inProfile={true} key={index}/>
+          )) : <></>}
         </ScrollView>
       </View>
     </PaperProvider>

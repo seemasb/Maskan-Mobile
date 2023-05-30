@@ -16,6 +16,7 @@ import PropertyDetails from './Pages/PropertyDetails';
 import SignUp from './Pages/SignUp'
 import Home from './Pages/Home';
 import BottomNavigator from './Components/ProfileComponents/BottomNavigator'
+// import PropertiesStack from './Pages/Properties';
 
 /////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
 import * as Notifications from 'expo-notifications';
@@ -359,10 +360,12 @@ export default function App() {
           <Drawer.Screen
             name="Prperties"
             component={Properties}
+            
             options={{
               drawerIcon: ({ focused, size }) => (
                 <MaterialCommunityIcons name="home-city" size={size} color={focused ? '#45729d' : 'gray'} />
               ),
+              
             }}
           />
           <Drawer.Screen
