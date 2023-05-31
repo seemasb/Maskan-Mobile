@@ -16,6 +16,8 @@ import PropertyDetails from './Pages/PropertyDetails';
 import SignUp from './Pages/SignUp'
 import Home from './Pages/Home';
 import BottomNavigator from './Components/ProfileComponents/BottomNavigator'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 // import PropertiesStack from './Pages/Properties';
 
 /////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
@@ -102,7 +104,7 @@ const theme = {
 
 
 export default function App() {
-  const [userLogged, setUserLogged] = React.useState(true);
+  const [userLogged, setUserLogged] = React.useState(false);
 
   /////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
   const [ExpoToken, setExpoToken] = React.useState('');
@@ -142,24 +144,27 @@ export default function App() {
       // Handle the received notification here
       console.log('Received notification:', notification);
     });
-  
+
     return () => {
       // Clean up the notification listener when the component unmounts
       Notifications.removeNotificationSubscription(notificationListener);
     };
   }, []);
 
-  const handleShowNotification = () => {
-    Notifications.scheduleNotificationAsync({
-      content: {
-        title: 'New Notification',
-        body: 'You have a new notification!',
-      },
-      trigger: null, // Show the notification immediately
-    });
-  };
+  ///////////////this shows notification inside the app//////////////////
+  // const handleShowNotification = () => {
+  //   Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: 'New Notification',
+  //       body: 'You have a new notification!',
+  //     },
+  //     trigger: null, 
+  //   });
+  // };
 
-  handleShowNotification()
+  // handleShowNotification()
+  ///////////////this shows notification inside the app//////////////////
+
 
   useEffect(() => {
     registerForPushNotificationsAsync();
@@ -206,55 +211,29 @@ export default function App() {
 
   /////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
 
+  function logOut() {
+    setUserLogged(false)
 
-  // React.useEffect(() => {
-  //   if (requestUserPermission) {
-  //     //return FCM token for the device
-  //     messaging().getToken().then(token => {
-  //       console.log(token);
-  //     })
-  //   }
-  //   else {
-  //     console.log("Failed token status", authStatus)
-  //   }
+    try {
+      const token =  AsyncStorage.getItem('token');
+      let header;
+      token ? header = {
+        'Authorization': 'Token ' + token
+      } : header = {}
 
+      axios.get(`${ROOT_URL}/accounts/logout/`, {
+        headers: header
+      })
+      console.log('Data successfully deleted.');
+      AsyncStorage.removeItem('token');
+      // const tokenCheck =  AsyncStorage.getItem('token');
+      // console.log('tokenCheck:::' , tokenCheck)
+    } catch (error) {
+      console.log('Error deleting data:', error);
+    }
+  }
 
-  //   // Check whether an initial notification is available
-  //   messaging()
-  //     .getInitialNotification()
-  //     .then(async (remoteMessage) => {
-  //       if (remoteMessage) {
-  //         console.log(
-  //           'Notification caused app to open from quit state:',
-  //           remoteMessage.notification,
-  //         );
-  //       }
-  //     });
-
-
-  //   // Assume a message-notification contains a "type" property in the data payload of the screen to open
-
-  //   messaging().onNotificationOpenedApp(async (remoteMessage) => {
-  //     console.log(
-  //       'Notification caused app to open from background state:',
-  //       remoteMessage.notification,
-  //     );
-  //   });
-
-  //   // Register background handler
-  //   messaging().setBackgroundMessageHandler(async remoteMessage => {
-  //     console.log('Message handled in the background!', remoteMessage);
-  //   });
-
-  //   //foreground notifications
-  //   const unsubscribe = messaging().onMessage(async remoteMessage => {
-  //     Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-  //   });
-
-  //   return unsubscribe;
-  // }, [])
-
-
+ 
 
   return (
     <PaperProvider theme={theme}>
@@ -271,14 +250,16 @@ export default function App() {
               marginBottom: 10
             },
             headerRight: () => (
-              <TouchableOpacity>
-                {/* <Text style={{ color: 'red', marginRight: 10 }}>Profile</Text> */}
+              
+              <TouchableOpacity onPress={() => logOut()}>
+                {userLogged &&
                 <Ionicons
-                  name="notifications"
+                  name="log-out-outline"
                   size={23}
                   color='#45739d'
                   style={{ marginRight: 17 }}
                 />
+              }
               </TouchableOpacity>
             ),
           }}
@@ -328,7 +309,7 @@ export default function App() {
             <>
               <Drawer.Screen
                 name="Log In"
-                component={() => <SignIn setUserLogged={setUserLogged} />}
+                component={() => <SignIn setUserLogged={setUserLogged} ExpoToken={ExpoToken} />}
                 options={{
                   drawerIcon: ({ focused, size }) => (
                     <Ionicons
@@ -360,12 +341,12 @@ export default function App() {
           <Drawer.Screen
             name="Prperties"
             component={Properties}
-            
+
             options={{
               drawerIcon: ({ focused, size }) => (
                 <MaterialCommunityIcons name="home-city" size={size} color={focused ? '#45729d' : 'gray'} />
               ),
-              
+
             }}
           />
           <Drawer.Screen

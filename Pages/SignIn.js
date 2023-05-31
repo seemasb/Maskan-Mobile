@@ -2,10 +2,12 @@ import { View } from "react-native";
 import SignInForm from "../Components/Sign/SignInForm";
 import { StyleSheet } from "react-native";
 
-function SignIn({setUserLogged}) {
+
+
+function SignIn({setUserLogged  , ExpoToken}) {
     return (
         <View style={styles.container}>
-            <SignInForm setUserLogged={setUserLogged}/>
+            <SignInForm setUserLogged={setUserLogged} ExpoToken={ExpoToken}/>
         </View>
     );
 }

@@ -63,9 +63,9 @@ const ChatRoomList = ({ navigation }) => {
   const [chatRoomsNames, setChatRoomsNames] = useState([]);
   const [lastMessages, setLastMessages] = useState({});
   const [timestamps, setTimestamps] = useState({});
-  const [uid, setUID] = useState(3);
+  const [uid, setUID] = useState();
 
-  // createChatRoomTest(3, 4)
+ 
 
   //////////////////////working/////////////////////
   // useEffect(() => {
@@ -108,7 +108,13 @@ const ChatRoomList = ({ navigation }) => {
     }
   };
 
+  useEffect(()=>{
+    // createChatRoomTest(1 , 2)
+  },[])
+
+
   useEffect(() => {
+    
     async function getUserData() {
       try {
         const token = await AsyncStorage.getItem('token');
@@ -118,7 +124,7 @@ const ChatRoomList = ({ navigation }) => {
           if (response.status === 200) {
             const user = response.data;
             console.log(user);
-            // setUID(user.id)
+            setUID(user.id)
           }
           else {
             console.log(response.data);

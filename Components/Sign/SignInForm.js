@@ -10,8 +10,9 @@ import { FAB } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import axios from 'axios';
+// http://18.198.203.6:8000/notifications/devices/token/2/
 
-export default function SignInForm({ setUserLogged }) {
+export default function SignInForm({ setUserLogged , ExpoToken}) {
     const [emailOrUsername, setEmailOrUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -31,32 +32,45 @@ export default function SignInForm({ setUserLogged }) {
         console.log(SignInData);
 
         try {
-            ROOT_URL ="http://18.198.203.6:8000";
-            await axios.post(`${ROOT_URL}/accounts/login/`, {SignInData:SignInData})
-            .then(response => {
-                if (response.status === 200) {
-                    // store the token in AsyncStorage
-                    AsyncStorage.setItem('token', response.data.Token);
-                
-                    // set userLogged to true
-                    setUserLogged(true);
-                
-                    console.log('Logged in successfully', response.data.Token);
-                }
-            })
-            .catch(error => {
-                console.error(error); 
-                // handle error here
-            });
+            ROOT_URL = "http://18.198.203.6:8000";
+            await axios.post(`${ROOT_URL}/accounts/login/`, { SignInData: SignInData })
+                .then(response => {
+                    if (response.status === 200) {
+                        // store the token in AsyncStorage
+                        AsyncStorage.setItem('token', response.data.Token);
+                        console.log('userID ::::', response.data.id)
+                        /////////////////send expo token /////////////////////
+                         axios.post(`${ROOT_URL}/notifications/devices/token/${response.data.id}/`, {
+                            token_id: ExpoToken
+                         })
+                            .then(response => {
+                                if (response.status === 200) {
+                                    console.log('expo token sent' , response.data)
+                                }
+                            })
+                            .catch(error => {
+                                console.error(error);
+                                // handle error here
+                            });
+                        // set userLogged to true
+                        setUserLogged(true);
+
+                        console.log('Logged in successfully', response.data.Token);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    // handle error here
+                });
             // console.log(response)
 
             // if (response.status === 200) {
             //   // store the token in AsyncStorage
             //   await AsyncStorage.setItem('token', response.data.Token);
-          
+
             //   // set userLogged to true
             //   setUserLogged(true);
-          
+
             //   console.log('Logged in successfully', response.data.Token);
             // }
         } catch (error) {
