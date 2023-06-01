@@ -5,7 +5,8 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { AntDesign } from '@expo/vector-icons';
 
 const data = [
-  { label: 'Buy', value: 'buy' },
+  { label: 'ALL', value: '' },
+  { label: 'Sell', value: 'sell' },
   { label: 'Rent', value: 'rent' },
 ];
 

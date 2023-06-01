@@ -22,6 +22,7 @@ import { collection, addDoc, onSnapshot, orderBy, query, getDocs, where } from "
 import { db } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import ROOT_URL from "../Components/ProfileComponents/config";
 
 const Stack = createStackNavigator();
 
@@ -126,7 +127,6 @@ function PropertyDetails({ route }) {
     useEffect(() => {
         const getPropertyDetails = async () => {
             try {
-                ROOT_URL = "http://18.198.203.6:8000";
                 propertyId = propName.id;
                 const response = await axios.get(`${ROOT_URL}/properties/home/${propertyId}/`)
                 setPropertyDetails(response.data)
@@ -327,10 +327,11 @@ function PropertyDetails({ route }) {
                 </Button>
                 <Portal>
                     <Dialog visible={visible} onDismiss={hideDialog}>
-                        <Dialog.Title style={styles.dialogueTitle}>January</Dialog.Title>
+                        <Dialog.Title style={styles.dialogueTitle}>June</Dialog.Title>
                         <Dialog.Content>
-                            {/* Content for the dialog */}
-                            <ScheduleTour showSnackBar={showSnackBar} hideDialog={hideDialog} />
+                            {propertyDetails?
+                            <ScheduleTour showSnackBar={showSnackBar} hideDialog={hideDialog} property_owner_id={propertyDetails.owner} property_id={propertyDetails.id} />:
+                            <></>}
                         </Dialog.Content>
                         {/* <Dialog.Actions>
                             <Button onPress={hideDialog}>Close</Button>

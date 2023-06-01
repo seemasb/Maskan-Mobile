@@ -5,8 +5,13 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { Ionicons } from '@expo/vector-icons';
 
 const data = [
-  { label: 'Nablus', value: 'nablus' },
-  { label: 'Ramallah', value: 'ramallah' },
+  { label: 'ALL', value: '' },
+  { label: 'New York', value: 'New York' },
+  { label: 'Los Angeles', value: 'Los Angeles' },
+  { label: 'Houston', value: 'Houston' },
+  { label: 'Philadelphia', value: 'Philadelphia' },
+  { label: 'Phoenix', value: 'Phoenix' },
+  { label: 'San Antonio', value: 'San Antonio' }
 ];
 
 const CityDropDown = ({ setCityValue, CityValue }) => {
