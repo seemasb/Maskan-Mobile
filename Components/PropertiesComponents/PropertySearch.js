@@ -102,7 +102,7 @@ const PropertySearch = ({ setCradSearchResponse }) => {
     const Search = async () => {
       try {
 
-        const response = await axios.get(`${ROOT_URL}/properties/houses/`, {
+        const response = await axios.get(`${ROOT_URL}/properties/houses/api/`, {
           params: {
             city: CityValue,
             state: StatusValue,
@@ -119,14 +119,8 @@ const PropertySearch = ({ setCradSearchResponse }) => {
         });
 
         console.log(response.status)
-        console.log(response.data)
         if (response.status === 200) {
           setCradSearchResponse(response.data);
-        }
-        else {
-          console.log("in 204 status");
-          setCradSearchResponse([]);
-
         }
 
       } catch (error) {

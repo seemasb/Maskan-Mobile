@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import PropertyCard from '../Components/PropertiesComponents/PropertyCard';
 import FilterProperties from '../Components/PropertiesComponents/FilterProperties';
 import PropertySearch from '../Components/PropertiesComponents/PropertySearch';
@@ -45,7 +45,7 @@ function Properties({ navigation }) {
         navigation.navigate('Property', { propName: CardData });
 
      }
-    const [cardSearchResponse, setCradSearchResponse] = useState([])
+    const [cardSearchResponse, setCradSearchResponse] = useState(null)
     return (
         <View style={styles.container}>
             <PropertySearch setCradSearchResponse={setCradSearchResponse} />
@@ -55,7 +55,8 @@ function Properties({ navigation }) {
             </View>
 
             <ScrollView style={styles.PropertiesList}>
-                {cardSearchResponse && cardSearchResponse.length >0 ?
+                {cardSearchResponse
+                 ?(cardSearchResponse.length >0 ?
                     cardSearchResponse.map((CardData) =>
                         <TouchableOpacity>
                             <PropertyCard CardData={CardData} is_inProfile={false} MoveTodetails={MoveTodetails}/>
@@ -64,9 +65,11 @@ function Properties({ navigation }) {
                     )
                     :
                     <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', rowGap: 30 }}>
-                        {/* <FontAwesome name="calendar-check-o" size={150} color="lightgray" /> */}
                         <Text style={{ fontSize: 25, color: 'lightgray' }}>No data matched</Text>
-                    </View>
+                    </View>)
+                    :
+                    <View style={[styles.ActivityIndicatorContainer, styles.horizontal]}>
+                    <ActivityIndicator size="large" color="#45729d" /></View>
                 }
                 {/* <PropertyCard />
                 <PropertyCard /> */}
@@ -94,8 +97,16 @@ const styles = StyleSheet.create({
     PropertiesList: {
         // backgroundColor: 'blue',
         zIndex: -100
-    }
-
+    },
+    ActivityIndicatorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+      },
+      horizontal: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        padding: 10,
+      }
 
 })
 

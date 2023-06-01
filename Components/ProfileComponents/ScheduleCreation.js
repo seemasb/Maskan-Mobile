@@ -122,7 +122,7 @@ const ScheduleCreation = () => {
 
     const handleSchedule = () => {
         const selectedDays = days.filter((day) => day.selected);
-        const userToken = localStorage.getItem('Token')
+        const userToken = AsyncStorage.getItem('token')
         let header;
         userToken ? header = {
             'Authorization': 'Token ' + userToken
