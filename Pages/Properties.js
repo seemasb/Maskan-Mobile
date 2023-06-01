@@ -45,7 +45,7 @@ function Properties({ navigation }) {
         navigation.navigate('Property', { propName: CardData });
 
      }
-    const [cardSearchResponse, setCradSearchResponse] = useState()
+    const [cardSearchResponse, setCradSearchResponse] = useState([])
     return (
         <View style={styles.container}>
             <PropertySearch setCradSearchResponse={setCradSearchResponse} />
@@ -55,7 +55,7 @@ function Properties({ navigation }) {
             </View>
 
             <ScrollView style={styles.PropertiesList}>
-                {cardSearchResponse ?
+                {cardSearchResponse && cardSearchResponse.length >0 ?
                     cardSearchResponse.map((CardData) =>
                         <TouchableOpacity>
                             <PropertyCard CardData={CardData} is_inProfile={false} MoveTodetails={MoveTodetails}/>

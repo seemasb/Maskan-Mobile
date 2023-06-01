@@ -13,22 +13,19 @@ import ScheduleTour from "../Components/PropertyDetailsComponents/ScheduleTour";
 import axios from "axios";
 import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import ROOT_URL from "../Components/ProfileComponents/config";
 
 function PropertyDetails({route}) {
     const { propName } = route.params;
-    // console.log('propName::::' , propName)
     const [visible, setVisible] = useState(false);
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [propertyDetails, setPropertyDetails] = useState();
     useEffect(() => {
         const getPropertyDetails = async () => {
             try {
-                ROOT_URL = "http://18.198.203.6:8000";
                 propertyId = propName.id;
                 const response = await axios.get(`${ROOT_URL}/properties/home/${propertyId}/`)
                 setPropertyDetails(response.data)
-                console.log(response.data.features.data)
             } catch (error) {
                 console.log(error)
             }
@@ -174,10 +171,11 @@ function PropertyDetails({route}) {
                 </Button>
                 <Portal>
                     <Dialog visible={visible} onDismiss={hideDialog}>
-                        <Dialog.Title style={styles.dialogueTitle}>January</Dialog.Title>
+                        <Dialog.Title style={styles.dialogueTitle}>June</Dialog.Title>
                         <Dialog.Content>
-                            {/* Content for the dialog */}
-                            <ScheduleTour showSnackBar={showSnackBar} hideDialog={hideDialog} />
+                            {propertyDetails?
+                            <ScheduleTour showSnackBar={showSnackBar} hideDialog={hideDialog} property_owner_id={propertyDetails.owner} property_id={propertyDetails.id} />:
+                            <></>}
                         </Dialog.Content>
                         {/* <Dialog.Actions>
                             <Button onPress={hideDialog}>Close</Button>
