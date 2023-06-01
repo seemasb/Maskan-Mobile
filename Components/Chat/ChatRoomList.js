@@ -50,7 +50,6 @@ const createChatRoomTest = async (participant1Id, participant2Id) => {
   } catch (e) {
     console.error("Error adding document: ", e);
   }
-  // return chatRoom.id;
 }
 
 // props:

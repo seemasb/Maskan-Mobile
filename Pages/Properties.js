@@ -41,10 +41,11 @@ export default PropertiesStack;
 function Properties({ navigation }) {
     function MoveTodetails(CardData) {
         console.log('cardData:::' , CardData)
-        // navigation.navigate('Property')
+        // navigation.navigate('PropertyChatScreen')
         navigation.navigate('Property', { propName: CardData });
 
      }
+
     const [cardSearchResponse, setCradSearchResponse] = useState()
     return (
         <View style={styles.container}>
