@@ -101,7 +101,7 @@ const PropertySearch = ({ setCradSearchResponse }) => {
 
     const Search = async () => {
       try {
-
+        setCradSearchResponse(null);
         const response = await axios.get(`${ROOT_URL}/properties/houses/api/`, {
           params: {
             city: CityValue,
