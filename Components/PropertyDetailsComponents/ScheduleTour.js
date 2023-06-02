@@ -3,17 +3,16 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Button, IconButton, Snackbar } from 'react-native-paper';
 import ROOT_URL from '../ProfileComponents/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MultipleSelectList } from "react-native-dropdown-select-list";
 import axios from 'axios';
 const ScheduleTour = ({ showSnackBar, hideDialog, property_owner_id, property_id }) => {
-    const [selectedDay, setSelectedDay] = useState('MON');
+    const [selectedDay, setSelectedDay] = useState();
     const [selectedTime, setSelectedTime] = useState(null);
     const [showSnackbar, setShowSnackbar] = useState(false);
     const [scheduleData, setScheduleData] = useState();
     const [ScheduleTimeSlots, setScheduleTimeSlots] = useState();
     const [days, setDays] = useState();
-
     const [Events, setEvent] = useState(null)
+
     const [slotsData, setSlotsData] = useState([]);
 
 
@@ -25,57 +24,70 @@ const ScheduleTour = ({ showSnackBar, hideDialog, property_owner_id, property_id
                 if (userToken) {
                     header = { 'Authorization': 'Token ' + userToken };
                 }
-                const response = await axios.get(`${ROOT_URL}/reservations/short_slots/`,{params: {
-                    property_owner_id: property_owner_id,  
-                  }} ,{ headers: header });
+                const response = await axios.get(`${ROOT_URL}/reservations/short_slots/`, {
+                    params: {
+                        property_owner_id: property_owner_id,
+                    }
+                }, { headers: header });
 
                 setSlotsData(response.data)
-            }catch(error){
+                console.log('response::::', response.data)
+            } catch (error) {
                 console.error(error);
             }
-            
-            let events = {};
-            slotsData.forEach(item => {
-                const { id, date, home, start_time, end_time, day, dayNum } = item;
-                const eventDate = day + '-' + dayNum
 
-                if (!events[eventDate]) {
-                    events[eventDate] = [];
-                }
 
-                events[eventDate].push({
-                    day: day,
-                    start_time: start_time,
-                    end_time: end_time,
-                    id: id,
-                    home: home
-                });
-            });
-            setEvent(events)
-            setScheduleData(events)
-            setDays(Object.keys(events));
         }
         updateFreeTimes()
 
     }, [])
 
+    useEffect(() => {
+        let events = {};
+        slotsData.forEach(item => {
+            const { id, date, home, start_time, end_time, day, dayNum } = item;
+            const eventDate = day + '-' + dayNum
+
+            if (!events[eventDate]) {
+                events[eventDate] = [];
+            }
+
+            events[eventDate].push({
+                day: day,
+                start_time: start_time,
+                end_time: end_time,
+                id: id,
+                home: home
+            });
+        });
+        setEvent(events)
+        setScheduleData(events)
+        setDays(Object.keys(events));
+    }, [slotsData])
+
+
     const handleDayClick = (day) => {
         setSelectedDay(day);
         setSelectedTime(null);
-        setScheduleTimeSlots(scheduleData[selectedDay] || []);
 
     };
 
+    useEffect(() => {
+        selectedDay && setScheduleTimeSlots(scheduleData[selectedDay]);
+    }, [selectedDay])
+
+
     const handleTimeClick = (time) => {
+        console.log('selectedTime:::', time)
         setSelectedTime(time);
     };
 
-    const handleScheduleClick = async (slot_id,home_id) => {
+    const handleScheduleClick = async () => {
         try {
             const userToken = await AsyncStorage.getItem('token');
             let header = {};
             if (userToken) {
-                if(selectedTime){
+                if (selectedTime) {
                     header = { 'Authorization': 'Token ' + userToken };
                     const res = await axios.patch(
                         `${ROOT_URL}/reservations/reserve/${selectedTime}/`,
@@ -87,16 +99,16 @@ const ScheduleTour = ({ showSnackBar, hideDialog, property_owner_id, property_id
                         }
                     );
                 }
-                else{
+                else {
                     console.log("select slot before");
                 }
             }
-            else{
+            else {
 
                 console.log("should log-in");
             }
-            
-        }catch(error){
+
+        } catch (error) {
             console.error(error);
         }
 
@@ -107,11 +119,11 @@ const ScheduleTour = ({ showSnackBar, hideDialog, property_owner_id, property_id
     const daysRen = (days) => {
         return days.map((day) => (
             <Button
-            key={day}
-            mode="contained"
-            onPress={() => handleDayClick(day)}
-            style={selectedDay == day ? styles.selectedDayButton : styles.DayButton}
-            labelStyle={[styles.dayButtonLabel, selectedDay == day ? styles.selectedDayButtonLabel : styles.dayButtonLabel]}
+                key={day}
+                mode="contained"
+                onPress={() => handleDayClick(day)}
+                style={selectedDay == day ? styles.selectedDayButton : styles.DayButton}
+                labelStyle={[styles.dayButtonLabel, selectedDay == day ? styles.selectedDayButtonLabel : styles.dayButtonLabel]}
             >
                 <Text>{day}</Text>
             </Button>

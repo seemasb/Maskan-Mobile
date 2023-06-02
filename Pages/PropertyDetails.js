@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, StyleSheet, Text, ScrollView, TouchableOpacity ,ActivityIndicator} from "react-native";
 import Gallary from "../Components/PropertyDetailsComponents/Gallary";
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -141,7 +141,7 @@ function PropertyDetails({ route }) {
             try {
                 const token = await AsyncStorage.getItem('token');
                 if (token !== null) {
-                    ROOT_URL = "http://18.198.203.6:8000";
+                    let ROOT_URL = "http://18.198.203.6:8000";
                     const response = await axios.get(`${ROOT_URL}/accounts/users/${token}`);
                     if (response.status === 200) {
                         const user = response.data;
@@ -187,7 +187,7 @@ function PropertyDetails({ route }) {
 
                 <View style={styles.detailsContainer} >
                     <View>
-                        <Text style={styles.price}>{propertyDetails.price}{propertyDetails.state === "S" ? ' $' : '$ / Year'}</Text>
+                        <Text style={styles.price}>{propertyDetails.price.toLocaleString()}{propertyDetails.state === "S" ? ' $' : '$ / Year'}</Text>
                         <View style={{ flexDirection: 'column', justifyContent: 'space-between', marginTop: 4 }}>
                             <View style={styles.location}>
                                 <Icon name="map-marker" size={17} color="#9e9e9e" />
@@ -237,7 +237,7 @@ function PropertyDetails({ route }) {
                                             {item.key === "garage" && <FontAwesome5 name="car-alt" size={30} color="#45729d" />}
                                             {item.key === "swimming pool" && <MaterialIcons name="pool" size={30} color="#45729d" />}
                                             {item.key === "elevator" && <MaterialIcons name="elevator" size={30} color="#45729d" />}
-                                            {item.key === "accessible" && <FontAwesome5 name="accessible-icon" size={30} color="#45729d" />}
+                                            {item.key === "accessable" && <FontAwesome5 name="accessible-icon" size={30} color="#45729d" />}
                                             {item.key === "garden" && <Entypo name="tree" size={30} color="#45729d" />}
                                             {item.key === "furnished" && <MaterialCommunityIcons name="sofa-single" size={30} color="#45729d" />}
                                             {item.key === "gym" && <MaterialCommunityIcons name="dumbbell" size={30} color="#45729d" />}
@@ -254,7 +254,7 @@ function PropertyDetails({ route }) {
                         <Text style={styles.sectionTitle}>Contact</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <View style={{ flexDirection: 'row', alignItems: 'center', columnGap: 10 }}>
-                                <Avatar.Text size={45} label="S" />
+                                <Avatar.Icon size={45} icon="key-chain" />
                                 <View>
                                     <Text style={{ lineHeight: 20, letterSpacing: 1, fontWeight: 'bold', color: 'gray' }}>
                                         {propertyDetails.owner_name}
@@ -308,7 +308,8 @@ function PropertyDetails({ route }) {
                     {/* <Divider style={{ marginTop: 10, marginBottom: 10 }} /> */}
 
                 </View>
-            </ScrollView> : <Text>Loading...</Text>}
+            </ScrollView> : <View style={[styles.ActivityIndicatorContainer, styles.horizontal]}>
+                    <ActivityIndicator size="large" color="#45729d" /></View>}
 
             <View
                 style={{
