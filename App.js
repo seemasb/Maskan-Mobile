@@ -17,6 +17,8 @@ import SignUp from './Pages/SignUp'
 import Home from './Pages/Home';
 import BottomNavigator from './Components/ProfileComponents/BottomNavigator'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LogBox } from 'react-native';
+
 
 // import PropertiesStack from './Pages/Properties';
 
@@ -108,6 +110,9 @@ export default function App() {
 
   /////////////////////////EXPO PUSH NOTIFICATION TEST//////////////////////////////
   const [ExpoToken, setExpoToken] = React.useState('');
+
+  //Ignore all log notifications
+  LogBox.ignoreAllLogs();
 
 
   async function registerForPushNotificationsAsync() {
