@@ -42,7 +42,7 @@ const ProfileInfo = ({ navigation}) => {
     const [userEmail, setUserEmail] = useState("johndoe@example.com");
     const [userPhoneNumber, setUserPhoneNumber] = useState("+1 555-555-5555");
     const [userProfilePicture, setUserProfilePicture] = useState(null);
-    const [userUsername, setUserUsername] = useState('Guest user');
+    const [userUsername, setUserUsername] = useState('Seema Sbouh');
     const [userBirthDate, setUserBirthDate] = useState("January 1, 1990");
     const [userIDCard, setUserIDCard] = useState(null);
 

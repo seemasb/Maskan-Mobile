@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import PropertyCard from '../Components/PropertiesComponents/PropertyCard';
 import FilterProperties from '../Components/PropertiesComponents/FilterProperties';
 import PropertySearch from '../Components/PropertiesComponents/PropertySearch';
@@ -41,11 +41,11 @@ export default PropertiesStack;
 function Properties({ navigation }) {
     function MoveTodetails(CardData) {
         console.log('cardData:::' , CardData)
-        // navigation.navigate('PropertyChatScreen')
+        // navigation.navigate('Property')
         navigation.navigate('Property', { propName: CardData });
 
      }
-    const [cardSearchResponse, setCradSearchResponse] = useState(null)
+    const [cardSearchResponse, setCradSearchResponse] = useState()
     return (
         <View style={styles.container}>
             <PropertySearch setCradSearchResponse={setCradSearchResponse} />
@@ -55,8 +55,7 @@ function Properties({ navigation }) {
             </View>
 
             <ScrollView style={styles.PropertiesList}>
-                {cardSearchResponse
-                 ?(cardSearchResponse.length >0 ?
+                {cardSearchResponse ?
                     cardSearchResponse.map((CardData) =>
                         <TouchableOpacity>
                             <PropertyCard CardData={CardData} is_inProfile={false} MoveTodetails={MoveTodetails}/>
@@ -65,11 +64,9 @@ function Properties({ navigation }) {
                     )
                     :
                     <View style={{ alignItems: 'center', flex: 1, justifyContent: 'center', rowGap: 30 }}>
+                        {/* <FontAwesome name="calendar-check-o" size={150} color="lightgray" /> */}
                         <Text style={{ fontSize: 25, color: 'lightgray' }}>No data matched</Text>
-                    </View>)
-                    :
-                    <View style={[styles.ActivityIndicatorContainer, styles.horizontal]}>
-                    <ActivityIndicator size="large" color="#45729d" /></View>
+                    </View>
                 }
                 {/* <PropertyCard />
                 <PropertyCard /> */}
@@ -97,16 +94,8 @@ const styles = StyleSheet.create({
     PropertiesList: {
         // backgroundColor: 'blue',
         zIndex: -100
-    },
-    ActivityIndicatorContainer: {
-        flex: 1,
-        justifyContent: 'center',
-      },
-      horizontal: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        padding: 10,
-      }
+    }
+
 
 })
 

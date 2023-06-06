@@ -132,12 +132,12 @@ export default function Map() {
           />
         )} */}
 
-        {/* <Polygon
+        <Polygon
           coordinates={polygonCoords}
           fillColor="rgba(255, 0, 0, 0.5)"
           strokeColor="rgba(255, 0, 0, 1)"
           strokeWidth={1}
-        /> */}
+        />
 
         {mapData.map(marker => (
           <Marker

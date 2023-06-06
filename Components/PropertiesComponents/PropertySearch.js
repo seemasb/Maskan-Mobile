@@ -17,9 +17,8 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import axios from 'axios';
-import { Entypo } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
-import ROOT_URL from '../ProfileComponents/config';
+
 
 
 
@@ -29,15 +28,11 @@ const PropertySearch = ({ setCradSearchResponse }) => {
   const [value, setValue] = useState([]);
   const [items, setItems] = useState([
     { label: 'Garage', value: 'garage', icon: () => <FontAwesome5 name="car-alt" size={20} color="#45729d" /> },
-    { label: 'Garden', value: 'garden', icon: () => <Entypo name="tree" size={20} color="#45729d" /> },
-    { label: 'Gym', value: 'gym', icon: () => <MaterialCommunityIcons name="dumbbell" size={20} color="#45729d" /> },
-    { label: 'Accessible', value: 'accessible', icon: () => <FontAwesome5 name="accessible-icon" size={20} color="#45729d" />},
-    { label: 'Elevator', value: 'elevator', icon: () => <MaterialIcons name="elevator" size={20} color="#45729d" /> },
-    { label: 'Furnished', value: 'furnished', icon: () => <MaterialCommunityIcons name="sofa-single" size={20} color="#45729d" /> },
-    { label: 'Swimming Pool', value: 'swimming pool', icon: () => <MaterialIcons name="pool" size={20} color="#45729d" /> }
-
+    { label: 'Pool', value: 'pool', icon: () => <MaterialIcons name="pool" size={20} color="#45729d" /> },
+    { label: 'Gym', value: 'gym', icon: () => <MaterialIcons name="sports-tennis" size={20} color="#45729d" /> },
+    { label: 'Balcony', value: 'balcony', icon: () => <MaterialCommunityIcons name="balcony" size={20} color="#45729d" /> },
+    { label: 'Elevator', value: 'elevator', icon: () => <MaterialIcons name="elevator" size={20} color="#45729d" /> }
   ]);
-
   DropDownPicker.setMode("BADGE");
 
   const [bedrooms, setBedrooms] = useState(null);
@@ -62,9 +57,9 @@ const PropertySearch = ({ setCradSearchResponse }) => {
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: 'red', padding: 20, zIndex: 100 };
 
-  useEffect(() => {
+  useEffect(()=>{
     handleSearchProperties();
-  }, [])
+  } , [])
 
 
   const handleSearchProperties = () => {
@@ -101,8 +96,9 @@ const PropertySearch = ({ setCradSearchResponse }) => {
 
     const Search = async () => {
       try {
-        setCradSearchResponse(null);
-        const response = await axios.get(`${ROOT_URL}/properties/houses/api/`, {
+        http://18.198.203.6:8000/properties/houses/?bedrooms=4
+        ROOT_URL = "http://18.198.203.6:8000";
+        const response = await axios.get(`${ROOT_URL}/properties/houses/`, {
           params: {
             city: CityValue,
             state: StatusValue,
@@ -118,17 +114,19 @@ const PropertySearch = ({ setCradSearchResponse }) => {
           }
         });
 
-        console.log(response.status)
-        if (response.status === 200) {
-          setCradSearchResponse(response.data);
-        }
-
+        setCradSearchResponse(response.data);
+        console.log(response.data)
       } catch (error) {
         console.error(error);
       }
     }
     Search();
+
+
   }
+
+
+
 
   return (
     <View style={styles.container}>
@@ -146,16 +144,16 @@ const PropertySearch = ({ setCradSearchResponse }) => {
           setItems={setItems}
           multiple={true}
           min={0}
-          max={8}
+          max={5}
           placeholder="Search by Features"
           badgeDotColors={["#45729d"]}
           badgeColors={['white']}
           badgeStyle={{ borderWidth: 1, borderColor: '#45729d' }}
           zIndex={1000}
-          autoScroll ={true}
-          dropDownMaxHeight={800}
 
         />
+
+        {/* <Searchbar style={styles.searchBar} placeholder="Search for a property" /> */}
       </View>
       <View style={styles.dropDowns}>
         <DropDown StatusValue={StatusValue} setStatusValue={setStatusValue} />
@@ -234,7 +232,7 @@ const PropertySearch = ({ setCradSearchResponse }) => {
             <Text style={{ color: 'gray' }}>{`Area Max: ${AreasliderValue}`}</Text>
 
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-
+              
               <MaterialCommunityIcons name="ruler-square-compass" size={24} color="black" />
               <Slider
                 style={{ width: '90%', height: 40 }}
@@ -256,7 +254,7 @@ const PropertySearch = ({ setCradSearchResponse }) => {
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 7 }}>
         <Button
           mode="contained"
-          style={{ backgroundColor: '#45729d', width: '85%' }}
+          style={{ backgroundColor: '#45729d', width: '85%'}}
           labelStyle={{ fontSize: 15 }}
           onPress={handleSearchProperties}
         >

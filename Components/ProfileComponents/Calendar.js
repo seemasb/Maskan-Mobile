@@ -18,7 +18,7 @@ function Calendar() {
                 const userToken = await AsyncStorage.getItem('token');
                 let header = {};
                 if (userToken) {
-                    header = { 'Authorization': 'Token ' + userToken };
+                    header = { 'Authorization': 'Token ' + 'f252f5f4fdece6fd808a13e1dc42d29eec0adb3e' };
                 }
                 const res = await axios.get(`${ROOT_URL}/reservations/slots/`, { headers: header });
                 console.log(res.data)
