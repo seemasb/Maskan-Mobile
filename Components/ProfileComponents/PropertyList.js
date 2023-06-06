@@ -33,11 +33,11 @@ const PropertyList = () => {
   const getEndpoint = (selectedButton) => {
     switch (selectedButton) {
       case "favorite":
-        return `${ROOT_URL}/properties/favourites_home_list/api/`;
+        return `${ROOT_URL}/properties/favourites_home_list/`;
       case "pending":
-        return `${ROOT_URL}/properties/pending_home_list/api/`;
+        return `${ROOT_URL}/properties/pending_home_list/`;
       case "posted":
-        return `${ROOT_URL}/properties/posted_home_list/api/`;
+        return `${ROOT_URL}/properties/posted_home_list/`;
       default:
         return "";
     }

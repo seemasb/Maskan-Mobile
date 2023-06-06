@@ -3,9 +3,6 @@ import { View, StyleSheet, Text } from 'react-native';
 import { Button, IconButton, Switch, TextInput } from 'react-native-paper';
 import { TimePickerModal } from 'react-native-paper-dates';
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import ROOT_URL from './config';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ScheduleCreation = () => {
     const [days, setDays] = useState([
@@ -69,7 +66,7 @@ const ScheduleCreation = () => {
                             onDismiss={onDismiss}
                             onConfirm={onConfirm}
                             hours={12}
-                            minutes={0}
+                            minutes={14}
                         />
                     </View>
                     <Text style={{marginHorizontal: 10}}>-</Text>
@@ -82,7 +79,7 @@ const ScheduleCreation = () => {
                             onDismiss={onDismiss}
                             onConfirm={onConfirm}
                             hours={12}
-                            minutes={0}
+                            minutes={14}
                         />
                     </View>
                 </View>
@@ -122,24 +119,6 @@ const ScheduleCreation = () => {
 
     const handleSchedule = () => {
         const selectedDays = days.filter((day) => day.selected);
-        const userToken = AsyncStorage.getItem('token')
-        let header;
-        userToken ? header = {
-            'Authorization': 'Token ' + userToken
-        } : header = {}
-
-        axios.post(`${ROOT_URL}/reservations/slots/`, {
-            list: selectedDays
-        }, {
-            headers: header
-        }
-        ).then(function (response) {
-                console.log(response);
-
-        })
-        .catch(function (error) {
-                console.log(error);
-        });
         console.log(selectedDays);
     };
 
